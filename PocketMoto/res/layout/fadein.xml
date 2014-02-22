@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This .xml file was from Practical Android 4 Game Development
+	   by J.F. DiMarzio with some slight modification to numbers. -->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+	android:interpolator="@android:anim/accelerate_interpolator"
+	android:duration="1150"
+	android:fromAlpha="-0.75"
+	android:toAlpha="1.0"/>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PocketMoto</string>
+    <string name="about_information">PocketMoto\n
+        Designed by:\n
+        William Freeman\n\n
+        Source code can be found at:\n
+        "GIT HUB SITE..."\n\n
+        PocketMoto is a mod of StarFighter by:\n
+        J.F. DiMarzo\n\n
+        Original source can be found at:\n
+        "PRACTICAL ANDROID 4 GAMES SITE..."</string>
+    <string name="backgroundMusicKey">backgroundMusicKeyName</string>           
+
+</resources>
