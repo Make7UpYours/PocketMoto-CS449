@@ -2,6 +2,7 @@ package edu.umkc.wjfkc2.pocketmoto;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
 import android.opengl.GLSurfaceView.Renderer;
 
 /** Renders game images.
@@ -14,6 +15,8 @@ import android.opengl.GLSurfaceView.Renderer;
 public class PMGameRenderer implements Renderer {
 	private PMBackground grassBackground = new PMBackground();
 	private PMBackground roadBackground = new PMBackground();
+	private PMBiker player1 = new PMBiker();
+	private PMMovementControl movementButtons = new PMMovementControl();
 	
 	private float bgScroll;
 	
@@ -30,18 +33,49 @@ public class PMGameRenderer implements Renderer {
 		}
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
-		scrollBackground1(gl);
-		//scrollBackground2(gl);
+		scrollBackground(gl);
+		movePlayer1(gl);
 		
-		//All other game drawing will be called here
+		//My own function calls.
+		showButtons(gl);
 		
-		//Blend functions causing transparency issue with road.
+		
 		//Enable transparency for textures.
-		//gl.glEnable(GL10.GL_BLEND); 
-	    //gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE); 
+		gl.glEnable(GL10.GL_BLEND); 
+	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA); 
+	}
+	/** Displays the proper animation for the movement control buttons.
+	 *  This function uses some code from DiMarzio, but only the OpenGL calls.
+	 *  I designed this function myself.
+	 */
+	private void showButtons(GL10 gl){
+		//Load model matrix mode & scale height.
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .075f, 1f);
+		//Draw button texture to screen & pop matrix off stack.
+		gl.glTranslatef(0.0f, 0.0f, 0.0f);
+		movementButtons.draw(gl);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Controls movement animation of the player character. */
+	private void movePlayer1(GL10 gl){
+		//Load model matrix mode & scale by .25.
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(.25f,  .25f,  1f);
+		//Place player the default x and y positions.
+		gl.glTranslatef(PMGameEngine.curPlayerPosX, .25f, 0f);
+		//Draw player texture to screen & pop matrix off the stack.
+		player1.draw(gl);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
 	}
 	/** Scrolls the stars background image. */
-	private void scrollBackground1(GL10 gl) {
+	private void scrollBackground(GL10 gl) {
 		//Prevent bgScroll from exceeding a max float value.
 		if (bgScroll == Float.MAX_VALUE){
 			bgScroll = 0f;
@@ -75,29 +109,6 @@ public class PMGameRenderer implements Renderer {
 		bgScroll += PMGameEngine.backgroundScrollSpeed;
 		gl.glLoadIdentity();
 	}
-	/** Scrolls the debris background image. */
-	/*private void scrollBackground2(GL10 gl) {
-		//Prevent bgScroll2 from exceeding a max float value.
-		if (bgScroll2 == Float.MAX_VALUE){
-			bgScroll2 = 0f;
-		}
-		/* Scale the background texture 2 by .5 and translate
-		 * the matrix to the right by .5.
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glPushMatrix();
-		gl.glScalef(.5f, 1f, 1f); //Scale image matrix.
-		gl.glTranslatef(1.5f, 0f, 0f); //Translate image matrix.
-		//Load up texture matrix mode and begin scrolling.
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glTranslatef(0.0f, bgScroll2, 0.0f);
-		//Draw texture image and pop matrix back on the stack.
-		background2.draw(gl);
-		gl.glPopMatrix();
-		bgScroll2 += SFEngine.SCROLL_BACKGROUND_2;
-		gl.glLoadIdentity();
-	}*/
 	
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -115,11 +126,12 @@ public class PMGameRenderer implements Renderer {
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
 		
-		//Blend functions causing transparency issue with road.
-		//gl.glEnable(GL10.GL_BLEND);
-		//gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE);
 		//Load textures for background image
 		grassBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_ONE, PMGameEngine.context);
 		roadBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_TWO, PMGameEngine.context);
+		//Load player texture.
+		player1.loadTexture(gl, PMGameEngine.PLAYER_BIKE, PMGameEngine.context);
+		//Loading the movement buttons that I created.
+		movementButtons.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS, PMGameEngine.context);
 	}
 }

@@ -23,7 +23,7 @@
         </activity>
         <activity android:name="PMMainMenu" android:screenOrientation="portrait"></activity>
         <service android:name="PMMusic"></service>
-        <activity android:name="PMGame"></activity>
+        <activity android:name="PMGame" android:screenOrientation="portrait"></activity>
         <activity android:name="PMAbout"></activity>
         <activity android:name="FragmentPreferenceActivity"></activity>
     </application>

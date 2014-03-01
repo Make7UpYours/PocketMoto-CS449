@@ -21,7 +21,7 @@ public class PMMainMenu extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.menuscreen); //Temp set to splash.
+		setContentView(R.layout.menuscreen);
 		
 		//TODO FIND A WAY TO STOP THE MUSIC WITHOUT HAVING TO RESTART APP!!!
 		if (!(FragmentPreferenceActivity.getMusicSetting(this))) {

@@ -22,12 +22,17 @@ public class PMGameEngine {
 	public static final int GAME_THREAD_FPS_SLEEP = (1000/60);
 	public static final int BACKGROUND_LAYER_ONE = R.drawable.grass;
 	public static final int BACKGROUND_LAYER_TWO = R.drawable.road;
-	public static final int BACKGROUND_MUSIC = R.raw.warfieldedit; //Change from DiMarzio's music!!!
+	public static final int BACKGROUND_MUSIC = R.raw.warfieldedit; //TODO: CHANGE FROM DiMarzio's MUSIC!!!
+	public static final int PLAYER_BIKE = R.drawable.biker;
+	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9; //Draw player every 9 gameloop iterations.
 	//Game control variables
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
-	//My own added variables.
+	public static float curPlayerPosX = 2.0f; //Keep track of the player's current x coord.
+	//MY own constants
+	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
+	//My own variables.
 	public static float backgroundScrollSpeed = 0.002f; //Set to temp value to display
 	
 	/** Kill the game and exit */
