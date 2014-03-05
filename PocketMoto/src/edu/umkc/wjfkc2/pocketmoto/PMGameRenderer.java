@@ -13,7 +13,6 @@ import android.opengl.GLSurfaceView.Renderer;
  *  and these will not be noted. 
  */
 public class PMGameRenderer implements Renderer {
-	//TODO FIGURE OUT HOW TO PREVENT BACKGROUND FROM RESETING ITS SCROLL SPEED!!!
 	private PMBackground grassBackground = new PMBackground();
 	private PMBackground roadBackground = new PMBackground();
 	private PMBiker player1 = new PMBiker();
@@ -67,7 +66,13 @@ public class PMGameRenderer implements Renderer {
 			movementButtons.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
-			PMGameEngine.backgroundScrollSpeed -= 0.001;
+			//Slow scroll speed but prevent negative scroll values.
+			if (PMGameEngine.backgroundScrollSpeed > 0){
+				//TODO REPLACE 0.001 WITH BIKE HANDLING!!!
+				PMGameEngine.backgroundScrollSpeed -= 0.001;
+			} else{
+				PMGameEngine.backgroundScrollSpeed = 0;
+			}
 			break;
 		case PMGameEngine.PLAYER_THROTTLE:
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -83,7 +88,11 @@ public class PMGameRenderer implements Renderer {
 			movementButtons.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
-			PMGameEngine.backgroundScrollSpeed += 0.002;
+			//TODO REPLACE MAX_BIKE_SPEED WITH BIKE SPEED!!!
+			if (PMGameEngine.backgroundScrollSpeed < PMGameEngine.MAX_BIKE_SPEED){
+				//TODO REPLACE 0.002 WITH BIKE ACCELERATION!!!
+				PMGameEngine.backgroundScrollSpeed += 0.002;
+			}
 			break;
 		case PMGameEngine.PLAYER_RELEASE:
 			gl.glMatrixMode(GL10.GL_MODELVIEW);

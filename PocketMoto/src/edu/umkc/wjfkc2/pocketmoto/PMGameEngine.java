@@ -32,6 +32,8 @@ public class PMGameEngine {
 	public static int playerBikeAction = 0;
 	//MY own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
+	//0.1375 is max scroll speed before screen bugs out.
+	public static final float MAX_BIKE_SPEED = 0.1375f;
 	//Constants to keep track of player actions.
 	public static final int PLAYER_THROTTLE = 1;
 	public static final int PLAYER_BRAKE = 2;
