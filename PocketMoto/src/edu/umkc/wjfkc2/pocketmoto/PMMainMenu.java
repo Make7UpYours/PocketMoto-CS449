@@ -46,7 +46,8 @@ public class PMMainMenu extends Activity implements OnClickListener {
 	}
 	
 	/** Creates options menu. */
-    @Override
+    @SuppressWarnings("unused")
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Create settings and about menu items.

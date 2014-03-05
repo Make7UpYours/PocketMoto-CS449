@@ -14,8 +14,6 @@ import android.view.View;
 public class PMGameEngine {
 	/* Constants that will be used in the game */
 	public static final int SPLASH_DELAY = 4000;
-	//public static final int MENU_BUTTON_ALPHA = 0;
-	//public static final boolean HAPTIC_BUTTON_FEEDBACK = true;
 	public static final int R_VOLUME = 100;
 	public static final int L_VOLUME = 100;
 	public static final boolean LOOP_BACKGROUND_MUSIC = true;
@@ -25,15 +23,20 @@ public class PMGameEngine {
 	public static final int BACKGROUND_MUSIC = R.raw.warfieldedit; //TODO: CHANGE FROM DiMarzio's MUSIC!!!
 	public static final int PLAYER_BIKE = R.drawable.biker;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9; //Draw player every 9 gameloop iterations.
+	public static final int PLAYER_RELEASE = 3;
 	//Game control variables
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
 	public static float curPlayerPosX = 2.0f; //Keep track of the player's current x coord.
+	public static int playerBikeAction = 0;
 	//MY own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
+	//Constants to keep track of player actions.
+	public static final int PLAYER_THROTTLE = 1;
+	public static final int PLAYER_BRAKE = 2;
 	//My own variables.
-	public static float backgroundScrollSpeed = 0.002f; //Set to temp value to display
+	public static float backgroundScrollSpeed = 0; //Don't scroll at game start.
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {
