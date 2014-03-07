@@ -22,6 +22,15 @@ public class PMSplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashscreen);
         PMGameEngine.context = this; //Code obtained from J.F. DiMarzio.
+        /* Fire up background music.
+		 * Code was from J.F. DiMarzio.
+		 */
+	    PMGameEngine.musicThread = new Thread(){
+	    	public void run(){
+	    		Intent bgmusic = new Intent(getApplicationContext(), PMMusic.class);
+	        	startService(bgmusic);
+	        }
+	    };
         //Start up splash screen transition to main menu.
         new Handler().postDelayed(new Runnable() {
         	@Override

@@ -18,6 +18,10 @@ public class PMGameRenderer implements Renderer {
 	private PMBiker player1 = new PMBiker();
 	private PMMovementControl movementButtons = new PMMovementControl();
 	
+	private long loopStart = 0;
+	private long loopEnd = 0;
+	private long loopRunTime = 0;
+	
 	private float bgScroll;
 	
 	/** Primary Game Loop. */
@@ -25,8 +29,11 @@ public class PMGameRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		//TODO Auto-generated method stub
 		//Ensure that the game runs at 60 fps.
+		loopStart = System.currentTimeMillis();
 		try {
-			Thread.sleep(PMGameEngine.GAME_THREAD_FPS_SLEEP);
+			if (loopRunTime < PMGameEngine.GAME_THREAD_FPS_SLEEP){
+				Thread.sleep(PMGameEngine.GAME_THREAD_FPS_SLEEP);
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,7 +49,9 @@ public class PMGameRenderer implements Renderer {
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
-	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA); 
+	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+	    loopEnd = System.currentTimeMillis();
+	    loopRunTime = loopEnd - loopStart;
 	}
 	/** Displays the proper animation for the movement control buttons.
 	 *  This function uses some code from DiMarzio, but only the OpenGL calls
@@ -91,7 +100,7 @@ public class PMGameRenderer implements Renderer {
 			//TODO REPLACE MAX_BIKE_SPEED WITH BIKE SPEED!!!
 			if (PMGameEngine.backgroundScrollSpeed < PMGameEngine.MAX_BIKE_SPEED){
 				//TODO REPLACE 0.002 WITH BIKE ACCELERATION!!!
-				PMGameEngine.backgroundScrollSpeed += 0.002;
+				PMGameEngine.backgroundScrollSpeed += 0.0015;
 			}
 			break;
 		case PMGameEngine.PLAYER_RELEASE:
@@ -104,6 +113,14 @@ public class PMGameRenderer implements Renderer {
 			movementButtons.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+			//Slow scroll speed but prevent negative scroll values.
+			if (PMGameEngine.backgroundScrollSpeed > 0){
+				//TODO REPLACE 0.001 WITH BIKE HANDLING!!!
+				//Engine bogs down at a lesser rate than braking
+				PMGameEngine.backgroundScrollSpeed -= 0.001 / 2;
+			} else{
+				PMGameEngine.backgroundScrollSpeed = 0;
+			}
 			break;
 		default:
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
