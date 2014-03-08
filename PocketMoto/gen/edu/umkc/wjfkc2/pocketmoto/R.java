@@ -27,7 +27,8 @@ public final class R {
         public static final int ic_launcher=0x7f020003;
         public static final int pocketmotomain=0x7f020004;
         public static final int pocketmotosplash=0x7f020005;
-        public static final int road=0x7f020006;
+        public static final int reset=0x7f020006;
+        public static final int road=0x7f020007;
     }
     public static final class id {
         public static final int about_content=0x7f090000;
@@ -44,7 +45,7 @@ public final class R {
         public static final int splashscreen=0x7f030004;
     }
     public static final class raw {
-        public static final int warfieldedit=0x7f050000;
+        public static final int drivenedit=0x7f050000;
     }
     public static final class string {
         public static final int about_information=0x7f070001;
