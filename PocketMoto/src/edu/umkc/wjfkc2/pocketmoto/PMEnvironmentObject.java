@@ -3,6 +3,7 @@ package edu.umkc.wjfkc2.pocketmoto;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 /** Creates instances of environmental objects that the player must dodge.
@@ -13,6 +14,13 @@ import javax.microedition.khronos.opengles.GL10;
  *  and these will not be noted. 
  */
 public class PMEnvironmentObject {
+	public float posY = 0f;
+	public float posX = 0f;
+	public boolean drawEnviroObject = false;
+	public int enviroType = 0;
+	
+	public Random random = new Random();
+	
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
@@ -35,7 +43,29 @@ public class PMEnvironmentObject {
 			0,1,2,
 			0,2,3,
 	};
-	/** Load up necessary attributes for SFGoodGuy. */
+	/** Determines what type of environment object will be drawn,
+	 *  if it will actually be drawn to the screen, and the 
+	 *  starting position of the object.
+	 *  This method was my own creation.
+	 */
+	public void initializeEnvironmentVariables(){
+		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
+		switch(enviroType){
+		case PMGameEngine.OBJ_TYPE_ROCK:
+			posX = random.nextFloat() * 3;
+			posY = 1f; //TEMP PLACEHOLDER
+			break;
+		case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+			posX = 2.0f;
+			posY = 2f; //TEMP PLACEHOLDER
+			break;
+		case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+			posX = 1.0f;
+			posY = 3f; //TEMP PLACEHOLDER
+			break;
+		}
+	}
+	/** Load up necessary attributes for PMEnvironmentObject. */
 	public PMEnvironmentObject() {
 		//Populate buffers.
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -54,9 +84,9 @@ public class PMEnvironmentObject {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	/** Draw Biker image. */
+	/** Draw environment object image. */
 	public void draw(GL10 gl, int[] spriteSheet) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[0]); //TODO: NEEDS DEBUGGING!!!
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[PMGameEngine.ENVIRONMENT_SPRITE_INDEX]);
 		//Enable culling & ignore any vertices not on the front face.
 		gl.glFrontFace(GL10.GL_CCW);
 		gl.glEnable(GL10.GL_CULL_FACE);

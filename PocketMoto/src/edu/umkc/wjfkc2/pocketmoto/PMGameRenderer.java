@@ -21,8 +21,6 @@ public class PMGameRenderer implements Renderer {
 			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
 	private PMTextures textureLoader;
 	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
-	private int[] spriteSheets2 = new int[PMGameEngine.NUM_SPRITESHEETS];
-	private PMTextures textureLoader2;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -48,7 +46,7 @@ public class PMGameRenderer implements Renderer {
 		
 		scrollBackground(gl);
 		movePlayer1(gl);
-		//moveEnvironmentObjects(gl);
+		moveEnvironmentObjects(gl);
 		
 		//My own function calls.
 		showButtons(gl);
@@ -60,21 +58,31 @@ public class PMGameRenderer implements Renderer {
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
 	}
-	//TODO: NEEDS SEVERE DEBUGGING!!!
-	/*private void moveEnvironmentObjects(GL10 gl){
+	/** Initializes environment objects. */
+	private void initializeEnvironment(){
+		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; index++){
+			environmentObjects[index] = new PMEnvironmentObject();
+			environmentObjects[index].initializeEnvironmentVariables();
+		}
+	}
+	
+	private void moveEnvironmentObjects(GL10 gl){
+		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS -1; index++){
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.25f, .25f, 1f);
-			gl.glTranslatef(1f, 1f, 0f);
+			gl.glTranslatef(environmentObjects[index].posX,
+					environmentObjects[index].posY, 0f);
 			//Load up texture mode and select the current texture.
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
 			gl.glTranslatef(0.0f, 0.0f, 0.0f);
-			environmentObjects[0].draw(gl, spriteSheets2);
+			environmentObjects[0].draw(gl, spriteSheets);
 			gl.glPopMatrix();
-			gl.glLoadIdentity();
-	}*/
+			gl.glLoadIdentity();	
+		}
+	}
 	/** Displays the proper animation for the movement control buttons.
 	 *  This function uses some code from DiMarzio, but only the OpenGL calls
 	 *  and the switch case design.
@@ -225,8 +233,8 @@ public class PMGameRenderer implements Renderer {
 				PMGameEngine.context, PMGameEngine.BIKE_SPRITE_INDEX + 1);
 		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS,
 				PMGameEngine.context, PMGameEngine.MOVEMENT_BUTTONS_INDEX + 1);
-		//spriteSheets2 = textureLoader2.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
-				//PMGameEngine.context, 1); BUGGY!!!!
+		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
+				PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);
 		
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glClearDepthf(1.0f);
@@ -236,5 +244,7 @@ public class PMGameRenderer implements Renderer {
 		//Load textures for background image
 		grassBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_ONE, PMGameEngine.context);
 		roadBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_TWO, PMGameEngine.context);
+		
+		initializeEnvironment();
 	}
 }

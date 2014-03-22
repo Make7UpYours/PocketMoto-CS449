@@ -19,7 +19,7 @@ public class PMTextures {
 	private int[] textures = new int[PMGameEngine.NUM_SPRITESHEETS];
 	/** Generate textures in constructor to avoid multiple generations. */
 	public PMTextures(GL10 gl){
-		gl.glGenTextures(1, textures, 0);
+		gl.glGenTextures(PMGameEngine.NUM_SPRITESHEETS, textures, 0);
 	}
 	/** Loads textures and returns their texture array. */
 	public int[] loadTexture(GL10 gl, int texture, Context context, int textureNumber){

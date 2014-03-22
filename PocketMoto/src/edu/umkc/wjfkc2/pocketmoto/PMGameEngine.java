@@ -24,21 +24,31 @@ public class PMGameEngine {
 	public static final int PLAYER_BIKE_SHEET = R.drawable.biker;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9; //Draw player every 9 gameloop iterations.
 	public static final int PLAYER_RELEASE = 3;
+	
 	//Game control variables
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
 	public static float curPlayerPosX = 2.0f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
+	
 	//My own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
 	public static final int ENVIRONMENT_OBJECTS = R.drawable.environment;
 	public static final int NUM_SPRITESHEETS = 3;
-	public static final int MAX_ENVIRO_OBJECTS = 4;
+	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;
 	public static final int MOVEMENT_BUTTONS_INDEX = 1;
 	public static final int ENVIRONMENT_SPRITE_INDEX = 2;
+	
+	//EnvironmentObject constants.
+	public static final int MAX_ENVIRO_OBJECTS = 4;
+	public static final int NUM_ENVIRO_TYPES = 3;
+	public static final int OBJ_TYPE_ROCK = 0;
+	public static final int OBJ_TYPE_UPWRD_CAR = 1;
+	public static final int OBJ_TYPE_DWNWRD_CAR = 2;
+	
 	//0.1375 is max scroll speed before screen bugs out.
 	public static final float MAX_BIKE_SPEED = 0.1375f;
 	//Constants to keep track of player actions.
