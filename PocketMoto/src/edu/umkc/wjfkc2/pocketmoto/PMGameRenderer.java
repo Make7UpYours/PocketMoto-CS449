@@ -17,6 +17,12 @@ public class PMGameRenderer implements Renderer {
 	private PMBackground roadBackground = new PMBackground();
 	private PMBiker player1 = new PMBiker();
 	private PMMovementControl movementButtons = new PMMovementControl();
+	private PMEnvironmentObject[] environmentObjects =
+			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
+	private PMTextures textureLoader;
+	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
+	private int[] spriteSheets2 = new int[PMGameEngine.NUM_SPRITESHEETS];
+	private PMTextures textureLoader2;
 	
 	private long loopStart = 0;
 	private long loopEnd = 0;
@@ -42,6 +48,7 @@ public class PMGameRenderer implements Renderer {
 		
 		scrollBackground(gl);
 		movePlayer1(gl);
+		//moveEnvironmentObjects(gl);
 		
 		//My own function calls.
 		showButtons(gl);
@@ -53,6 +60,21 @@ public class PMGameRenderer implements Renderer {
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
 	}
+	//TODO: NEEDS SEVERE DEBUGGING!!!
+	/*private void moveEnvironmentObjects(GL10 gl){
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.25f, .25f, 1f);
+			gl.glTranslatef(1f, 1f, 0f);
+			//Load up texture mode and select the current texture.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.0f, 0.0f);
+			environmentObjects[0].draw(gl, spriteSheets2);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+	}*/
 	/** Displays the proper animation for the movement control buttons.
 	 *  This function uses some code from DiMarzio, but only the OpenGL calls
 	 *  and the switch case design.
@@ -72,7 +94,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glTranslatef(0.0f,0.5f, 0.0f);
 			//Draw button texture to screen & pop matrix off stack.
-			movementButtons.draw(gl);
+			movementButtons.draw(gl, spriteSheets);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 			//Slow scroll speed but prevent negative scroll values.
@@ -94,7 +116,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glTranslatef(0.0f,0.25f, 0.0f); 
 			//Draw button texture to screen & pop matrix off stack.
-			movementButtons.draw(gl);
+			movementButtons.draw(gl, spriteSheets);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 			//TODO REPLACE MAX_BIKE_SPEED WITH BIKE SPEED!!!
@@ -110,7 +132,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glScalef(1f, .075f, 1f);
 			//Draw button texture to screen & pop matrix off stack.
 			gl.glTranslatef(0.0f, 0.0f, 0.0f);
-			movementButtons.draw(gl);
+			movementButtons.draw(gl, spriteSheets);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 			//Slow scroll speed but prevent negative scroll values.
@@ -129,7 +151,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glScalef(1f, .075f, 1f);
 			//Draw button texture to screen & pop matrix off stack.
 			gl.glTranslatef(0.0f, 0.0f, 0.0f);
-			movementButtons.draw(gl);
+			movementButtons.draw(gl, spriteSheets);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 			break;
@@ -145,7 +167,7 @@ public class PMGameRenderer implements Renderer {
 		//Place player the default x and y positions.
 		gl.glTranslatef(PMGameEngine.curPlayerPosX, .25f, 0f);
 		//Draw player texture to screen & pop matrix off the stack.
-		player1.draw(gl);
+		player1.draw(gl, spriteSheets);
 		gl.glPopMatrix();
 		gl.glLoadIdentity();
 	}
@@ -196,6 +218,16 @@ public class PMGameRenderer implements Renderer {
 	
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		//Load up texture sheet.
+		textureLoader = new PMTextures(gl);
+		//Load sprite sheets.
+		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.PLAYER_BIKE_SHEET,
+				PMGameEngine.context, PMGameEngine.BIKE_SPRITE_INDEX + 1);
+		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS,
+				PMGameEngine.context, PMGameEngine.MOVEMENT_BUTTONS_INDEX + 1);
+		//spriteSheets2 = textureLoader2.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
+				//PMGameEngine.context, 1); BUGGY!!!!
+		
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glClearDepthf(1.0f);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
@@ -204,9 +236,5 @@ public class PMGameRenderer implements Renderer {
 		//Load textures for background image
 		grassBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_ONE, PMGameEngine.context);
 		roadBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_TWO, PMGameEngine.context);
-		//Load player texture.
-		player1.loadTexture(gl, PMGameEngine.PLAYER_BIKE, PMGameEngine.context);
-		//Loading the movement buttons that I created.
-		movementButtons.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS, PMGameEngine.context);
 	}
 }

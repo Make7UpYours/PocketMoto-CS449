@@ -5,15 +5,14 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
-
-/** Loads & displays the Biker movement control texture.
+/** Creates instances of environmental objects that the player must dodge.
  *  Most of this code was came from: Practical Android 4 Games Development
  *  by J.F. DiMarzio
  *  It will be noted where I used my own code. There might be areas
  *  that are slightly modified numerically from J.F. DiMarzio's code
  *  and these will not be noted. 
  */
-public class PMMovementControl {
+public class PMEnvironmentObject {
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
@@ -24,14 +23,11 @@ public class PMMovementControl {
 			1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 	};
-	/* Texture mapping array, displays the correct portion of the texture.
-	 * These values have been modified from DiMarzio's
-	 * in order to show the correct buttons.
-	 */
+	//Texture mapping array, displays 1/4 of the sprite sheet.
 	private float texture[] = {
 			0.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 0.25f,
+			0.25f, 0.0f,
+			0.25f, 0.25f,
 			0.0f, 0.25f,
 	};
 	//Byte positions forming a square using triangles.
@@ -39,8 +35,8 @@ public class PMMovementControl {
 			0,1,2,
 			0,2,3,
 	};
-	/** Load up necessary attributes for PMMovementControl. */
-	public PMMovementControl() {
+	/** Load up necessary attributes for SFGoodGuy. */
+	public PMEnvironmentObject() {
 		//Populate buffers.
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -58,9 +54,9 @@ public class PMMovementControl {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	/** Draw Movement Buttons image. */
+	/** Draw Biker image. */
 	public void draw(GL10 gl, int[] spriteSheet) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[PMGameEngine.MOVEMENT_BUTTONS_INDEX]);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[0]); //TODO: NEEDS DEBUGGING!!!
 		//Enable culling & ignore any vertices not on the front face.
 		gl.glFrontFace(GL10.GL_CCW);
 		gl.glEnable(GL10.GL_CULL_FACE);

@@ -1,17 +1,10 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLUtils;
 
 /** Loads & displays the Biker texture.
  *  Most of this code was came from: Practical Android 4 Games Development
@@ -24,7 +17,6 @@ public class PMBiker {
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
-	private int[] textures = new int[1];
 	//Image corner vertices.
 	private float vertices[] = {
 			0.0f, 0.0f, 0.0f,
@@ -64,8 +56,8 @@ public class PMBiker {
 		indexBuffer.position(0);
 	}
 	/** Draw Biker image. */
-	public void draw(GL10 gl) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+	public void draw(GL10 gl, int[] spriteSheet) {
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[PMGameEngine.BIKE_SPRITE_INDEX]);
 		//Enable culling & ignore any vertices not on the front face.
 		gl.glFrontFace(GL10.GL_CCW);
 		gl.glEnable(GL10.GL_CULL_FACE);
@@ -81,37 +73,4 @@ public class PMBiker {
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glDisable(GL10.GL_CULL_FACE);
 	}
-	/** Loads in a texture, to be called at initialization. */
-	public void loadTexture(GL10 gl, int texture, Context context) {
-		//Load texture into stream.
-		InputStream imagestream = context.getResources().openRawResource(texture);
-		Bitmap bitmap = null;
-		try{
-			bitmap = BitmapFactory.decodeStream(imagestream);
-		} catch(Exception e){
-			
-		}finally {
-			//Clear and close.
-			try{
-				imagestream.close();
-				imagestream = null;
-			} catch(IOException e){
-				
-			}
-		}
-		//Generate and bind texture to OpenGL.
-		gl.glGenTextures(1, textures, 0);
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-		//Map texture onto vertices.
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		//Clamp texture images to a specified edge.
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-	    gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-		//Associate bitmap input stream.
-	    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-	    bitmap.recycle();
-		
-	}
-
 }
