@@ -47,10 +47,8 @@ public class PMGameRenderer implements Renderer {
 		scrollBackground(gl);
 		movePlayer1(gl);
 		moveEnvironmentObjects(gl);
-		
 		//My own function calls.
 		showButtons(gl);
-		
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
@@ -65,22 +63,73 @@ public class PMGameRenderer implements Renderer {
 			environmentObjects[index].initializeEnvironmentVariables();
 		}
 	}
-	
+	/** Iterates through each environmentObject & draws it on screen.
+	 *  Method is similar to moveEnemy() from DiMarzio but is heavily
+	 *  modified to fit my game.
+	 */
 	private void moveEnvironmentObjects(GL10 gl){
 		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS -1; index++){
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.25f, .25f, 1f);
-			gl.glTranslatef(environmentObjects[index].posX,
-					environmentObjects[index].posY, 0f);
-			//Load up texture mode and select the current texture.
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glTranslatef(0.0f, 0.0f, 0.0f);
-			environmentObjects[0].draw(gl, spriteSheets);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();	
+			if (environmentObjects[index].drawEnviroObject){
+				switch(environmentObjects[index].enviroType){
+				case PMGameEngine.OBJ_TYPE_ROCK:
+					gl.glMatrixMode(GL10.GL_MODELVIEW);
+					gl.glLoadIdentity();
+					gl.glPushMatrix();
+					gl.glScalef(.25f, .25f, 1f);
+					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed;
+					gl.glTranslatef(environmentObjects[index].posX,
+							environmentObjects[index].posY, 0f);
+					//Load up texture mode and select the current texture.
+					gl.glMatrixMode(GL10.GL_TEXTURE);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.0f, 0.0f, 0.0f);
+					environmentObjects[0].draw(gl, spriteSheets);
+					gl.glPopMatrix();
+					gl.glLoadIdentity();	
+					break;
+				case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+					gl.glMatrixMode(GL10.GL_MODELVIEW);
+					gl.glLoadIdentity();
+					gl.glPushMatrix();
+					gl.glScalef(.25f, .25f, 1f);
+					//Car always moves in upward direction.
+					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+							- PMGameEngine.CAR_SPEED; 
+					gl.glTranslatef(environmentObjects[index].posX,
+							environmentObjects[index].posY, 0f);
+					//Load up texture mode and select the current texture.
+					gl.glMatrixMode(GL10.GL_TEXTURE);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.25f, 0.0f, 0.0f);
+					environmentObjects[0].draw(gl, spriteSheets);
+					gl.glPopMatrix();
+					gl.glLoadIdentity();	
+					break;
+				case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+					gl.glMatrixMode(GL10.GL_MODELVIEW);
+					gl.glLoadIdentity();
+					gl.glPushMatrix();
+					gl.glScalef(.25f, .25f, 1f);
+					//Car always moves in downward direction.
+					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+							+ PMGameEngine.CAR_SPEED;
+					gl.glTranslatef(environmentObjects[index].posX,
+							environmentObjects[index].posY, 0f);
+					//Load up texture mode and select the current texture.
+					gl.glMatrixMode(GL10.GL_TEXTURE);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.5f, 0.0f, 0.0f);
+					environmentObjects[0].draw(gl, spriteSheets);
+					gl.glPopMatrix();
+					gl.glLoadIdentity();	
+					break;
+				}
+			}
+			//Object fell off screen or had not been drawn.
+			if (environmentObjects[index].posY <= 0 
+					|| !environmentObjects[index].drawEnviroObject){
+				environmentObjects[index].initializeEnvironmentVariables();
+			}
 		}
 	}
 	/** Displays the proper animation for the movement control buttons.
@@ -107,8 +156,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			//Slow scroll speed but prevent negative scroll values.
 			if (PMGameEngine.backgroundScrollSpeed > 0){
-				//TODO REPLACE 0.001 WITH BIKE HANDLING!!!
-				PMGameEngine.backgroundScrollSpeed -= 0.001;
+				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling;
 			} else{
 				PMGameEngine.backgroundScrollSpeed = 0;
 			}
@@ -129,8 +177,7 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			//TODO REPLACE MAX_BIKE_SPEED WITH BIKE SPEED!!!
 			if (PMGameEngine.backgroundScrollSpeed < PMGameEngine.MAX_BIKE_SPEED){
-				//TODO REPLACE 0.002 WITH BIKE ACCELERATION!!!
-				PMGameEngine.backgroundScrollSpeed += 0.0015;
+				PMGameEngine.backgroundScrollSpeed += PMGameEngine.playerBikeAcceleration;
 			}
 			break;
 		case PMGameEngine.PLAYER_RELEASE:
@@ -145,9 +192,8 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			//Slow scroll speed but prevent negative scroll values.
 			if (PMGameEngine.backgroundScrollSpeed > 0){
-				//TODO REPLACE 0.001 WITH BIKE HANDLING!!!
 				//Engine bogs down at a lesser rate than braking
-				PMGameEngine.backgroundScrollSpeed -= 0.001 / 2;
+				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling / 2;
 			} else{
 				PMGameEngine.backgroundScrollSpeed = 0;
 			}

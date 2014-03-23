@@ -31,6 +31,8 @@ public class PMGameEngine {
 	public static Display display;
 	public static float curPlayerPosX = 2.0f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
+	public static float playerBikeHandling = 0.001f;
+	public static float playerBikeAcceleration = 0.0015f;
 	
 	//My own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
@@ -48,6 +50,7 @@ public class PMGameEngine {
 	public static final int OBJ_TYPE_ROCK = 0;
 	public static final int OBJ_TYPE_UPWRD_CAR = 1;
 	public static final int OBJ_TYPE_DWNWRD_CAR = 2;
+	public static final float CAR_SPEED = 0.003f;
 	
 	//0.1375 is max scroll speed before screen bugs out.
 	public static final float MAX_BIKE_SPEED = 0.1375f;

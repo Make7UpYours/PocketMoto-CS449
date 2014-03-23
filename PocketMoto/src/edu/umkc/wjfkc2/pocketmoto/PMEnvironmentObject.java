@@ -50,18 +50,19 @@ public class PMEnvironmentObject {
 	 */
 	public void initializeEnvironmentVariables(){
 		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
+		drawEnviroObject = random.nextBoolean();
 		switch(enviroType){
 		case PMGameEngine.OBJ_TYPE_ROCK:
 			posX = random.nextFloat() * 3;
-			posY = 1f; //TEMP PLACEHOLDER
+			posY = (random.nextFloat() * 4) + 4;
 			break;
 		case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
 			posX = 2.0f;
-			posY = 2f; //TEMP PLACEHOLDER
+			posY = (random.nextFloat() * 4) + 4;
 			break;
 		case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
 			posX = 1.0f;
-			posY = 3f; //TEMP PLACEHOLDER
+			posY = (random.nextFloat() * 4) + 4;
 			break;
 		}
 	}
