@@ -45,8 +45,8 @@ public class PMGameRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
-		movePlayer1(gl);
 		moveEnvironmentObjects(gl);
+		movePlayer1(gl);
 		//My own function calls.
 		showButtons(gl);
 		
@@ -88,48 +88,176 @@ public class PMGameRenderer implements Renderer {
 					gl.glLoadIdentity();	
 					break;
 				case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
-					gl.glMatrixMode(GL10.GL_MODELVIEW);
-					gl.glLoadIdentity();
-					gl.glPushMatrix();
-					gl.glScalef(.25f, .25f, 1f);
-					//Car always moves in upward direction.
-					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
-							- PMGameEngine.CAR_SPEED; 
-					gl.glTranslatef(environmentObjects[index].posX,
-							environmentObjects[index].posY, 0f);
-					//Load up texture mode and select the current texture.
-					gl.glMatrixMode(GL10.GL_TEXTURE);
-					gl.glLoadIdentity();
-					gl.glTranslatef(0.25f, 0.0f, 0.0f);
-					environmentObjects[0].draw(gl, spriteSheets);
-					gl.glPopMatrix();
-					gl.glLoadIdentity();	
+					drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_UPWRD_CAR);
 					break;
 				case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
-					gl.glMatrixMode(GL10.GL_MODELVIEW);
-					gl.glLoadIdentity();
-					gl.glPushMatrix();
-					gl.glScalef(.25f, .25f, 1f);
-					//Car always moves in downward direction.
-					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
-							+ PMGameEngine.CAR_SPEED;
-					gl.glTranslatef(environmentObjects[index].posX,
-							environmentObjects[index].posY, 0f);
-					//Load up texture mode and select the current texture.
-					gl.glMatrixMode(GL10.GL_TEXTURE);
-					gl.glLoadIdentity();
-					gl.glTranslatef(0.5f, 0.0f, 0.0f);
-					environmentObjects[0].draw(gl, spriteSheets);
-					gl.glPopMatrix();
-					gl.glLoadIdentity();	
+					drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_DWNWRD_CAR);
 					break;
 				}
 			}
 			//Object fell off screen or had not been drawn.
-			if (environmentObjects[index].posY <= 0 
+			if (environmentObjects[index].posY <= -1 
+					|| environmentObjects[index].posY >= 8.5
 					|| !environmentObjects[index].drawEnviroObject){
 				environmentObjects[index].initializeEnvironmentVariables();
 			}
+		}
+	}
+	/** Draws the correct color of the car and draws it on screen.
+	 *  I designed this function myself. There is absolutely no
+	 *  code taken from DiMarzio.
+	 */
+	private void drawCarColor(GL10 gl, int index, int carDirection){
+		if(carDirection == PMGameEngine.OBJ_TYPE_UPWRD_CAR){
+			switch(environmentObjects[index].carColor){
+			case PMGameEngine.YELLOW_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in upward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						- PMGameEngine.CAR_SPEED; 
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.25f, 0.0f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+				break;
+			case PMGameEngine.GREY_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in upward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						- PMGameEngine.CAR_SPEED; 
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.25f, 0.25f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+				break;
+			case PMGameEngine.RED_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in upward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						- PMGameEngine.CAR_SPEED; 
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.25f, 0.5f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+				break;
+			case PMGameEngine.GREEN_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in upward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						- PMGameEngine.CAR_SPEED; 
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.25f, 0.75f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+				break;
+			}	
+		}else{
+			switch(environmentObjects[index].carColor){
+			case PMGameEngine.YELLOW_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in downward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						+ PMGameEngine.CAR_SPEED;
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.5f, 0.0f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();	
+				break;
+			case PMGameEngine.GREY_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in downward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						+ PMGameEngine.CAR_SPEED;
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.5f, 0.25f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();	
+				break;
+			case PMGameEngine.RED_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in downward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						+ PMGameEngine.CAR_SPEED;
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.5f, 0.5f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();	
+				break;
+			case PMGameEngine.GREEN_CAR:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				//Car always moves in downward direction.
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
+						+ PMGameEngine.CAR_SPEED;
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.5f, 0.75f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();	
+				break;
+			}	
 		}
 	}
 	/** Displays the proper animation for the movement control buttons.
@@ -217,9 +345,9 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(.25f,  .25f,  1f);
+		gl.glScalef(.175f,  .175f,  1f);
 		//Place player the default x and y positions.
-		gl.glTranslatef(PMGameEngine.curPlayerPosX, .25f, 0f);
+		gl.glTranslatef(PMGameEngine.curPlayerPosX, .375f, 0f);
 		//Draw player texture to screen & pop matrix off the stack.
 		player1.draw(gl, spriteSheets);
 		gl.glPopMatrix();

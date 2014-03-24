@@ -18,6 +18,10 @@ public class PMEnvironmentObject {
 	public float posX = 0f;
 	public boolean drawEnviroObject = false;
 	public int enviroType = 0;
+	public int carColor = -1;
+	
+	private final int LEFT_ROCK = 0;
+	private final int RIGHT_ROCK = 1;
 	
 	public Random random = new Random();
 	
@@ -53,14 +57,26 @@ public class PMEnvironmentObject {
 		drawEnviroObject = random.nextBoolean();
 		switch(enviroType){
 		case PMGameEngine.OBJ_TYPE_ROCK:
-			posX = random.nextFloat() * 3;
-			posY = (random.nextFloat() * 4) + 4;
+			carColor = -1; //Used for error detection.
+			int rockSide = random.nextInt(2);
+			switch(rockSide){
+			case LEFT_ROCK:
+				posX = 0f;
+				posY = (random.nextFloat() * 4) + 4;
+				break;
+			case RIGHT_ROCK:
+				posX = 3f;
+				posY = (random.nextFloat() * 4) + 4;
+				break;
+			}
 			break;
 		case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+			carColor = random.nextInt(4);
 			posX = 2.0f;
 			posY = (random.nextFloat() * 4) + 4;
 			break;
 		case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+			carColor = random.nextInt(4);
 			posX = 1.0f;
 			posY = (random.nextFloat() * 4) + 4;
 			break;

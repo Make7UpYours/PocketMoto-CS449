@@ -29,7 +29,7 @@ public class PMGameEngine {
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
-	public static float curPlayerPosX = 2.0f; //Keep track of the player's current x coord.
+	public static float curPlayerPosX = 3.1f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
 	public static float playerBikeHandling = 0.001f;
 	public static float playerBikeAcceleration = 0.0015f;
@@ -50,7 +50,11 @@ public class PMGameEngine {
 	public static final int OBJ_TYPE_ROCK = 0;
 	public static final int OBJ_TYPE_UPWRD_CAR = 1;
 	public static final int OBJ_TYPE_DWNWRD_CAR = 2;
-	public static final float CAR_SPEED = 0.003f;
+	public static final float CAR_SPEED = 0.01f;
+	public static final int YELLOW_CAR = 0;
+	public static final int GREY_CAR = 1;
+	public static final int RED_CAR = 2;
+	public static final int GREEN_CAR = 3;
 	
 	//0.1375 is max scroll speed before screen bugs out.
 	public static final float MAX_BIKE_SPEED = 0.1375f;
