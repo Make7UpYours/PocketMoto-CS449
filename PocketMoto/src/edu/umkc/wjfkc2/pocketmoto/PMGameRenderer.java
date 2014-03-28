@@ -31,7 +31,6 @@ public class PMGameRenderer implements Renderer {
 	/** Primary Game Loop. */
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		//TODO Auto-generated method stub
 		//Ensure that the game runs at 60 fps.
 		loopStart = System.currentTimeMillis();
 		try {
@@ -39,7 +38,6 @@ public class PMGameRenderer implements Renderer {
 				Thread.sleep(PMGameEngine.GAME_THREAD_FPS_SLEEP);
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
@@ -50,11 +48,87 @@ public class PMGameRenderer implements Renderer {
 		//My own function calls.
 		showButtons(gl);
 		
+		detectInitialEnviroCollisions();
+		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	/** Detects collision events between environmental objects before they
+	 *  appear on screen. If a collision does occur then the object will be
+	 *  redrawn.
+	 *  This function is a heavily modified version of DiMarzio's
+	 *  detectCollisions() function.
+	 *  TODO: WORKS MOST OF THE TIME THERE ARE SOME BUGS!!!
+	 */
+	private void detectInitialEnviroCollisions(){
+		for (int i = 0; i < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; i++){
+			/* Only need to check if the object is drawn & is off the screen.
+			 * Environment objects will not collide after being drawn on screen.
+			 */
+			if (environmentObjects[i].posY > 4){
+				//Determine the initial object's type.
+				switch(environmentObjects[i].enviroType){
+				case PMGameEngine.OBJ_TYPE_ROCK:
+					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
+						if (i != j){
+							//Objects will only collide if they are the same type.
+							if (environmentObjects[j].posY > 4
+									&& environmentObjects[j].enviroType 
+									== PMGameEngine.OBJ_TYPE_ROCK){
+								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
+										&& environmentObjects[i].posY <= environmentObjects[j].posY)
+										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
+										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+									//Collision occurred reinitialize object.
+									environmentObjects[i].initializeEnvironmentVariables();
+								}
+								
+							}
+						}
+					}
+					break;
+				case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
+						if (i != j){
+							//Objects will only collide if they are the same type.
+							if (environmentObjects[j].posY > 4
+									&& environmentObjects[j].enviroType
+									== PMGameEngine.OBJ_TYPE_UPWRD_CAR){
+								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
+										&& environmentObjects[i].posY <= environmentObjects[j].posY)
+										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
+										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+									//Collision occurred reinitialize object.
+									environmentObjects[i].initializeEnvironmentVariables();
+								}
+							}	
+						}
+					}
+					break;
+				case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
+						if (i != j){
+							//Objects will only collide if they are the same type.
+							if (environmentObjects[j].posY > 4
+									&& environmentObjects[j].enviroType
+									== PMGameEngine.OBJ_TYPE_DWNWRD_CAR){
+								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
+										&& environmentObjects[i].posY <= environmentObjects[j].posY)
+										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
+										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+									//Collision occurred reinitialize object.
+									environmentObjects[i].initializeEnvironmentVariables();
+								}
+							}	
+						}
+					}
+					break;
+				}
+			}
+		}
 	}
 	/** Initializes environment objects. */
 	private void initializeEnvironment(){
@@ -69,36 +143,33 @@ public class PMGameRenderer implements Renderer {
 	 */
 	private void moveEnvironmentObjects(GL10 gl){
 		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS -1; index++){
-			if (environmentObjects[index].drawEnviroObject){
-				switch(environmentObjects[index].enviroType){
-				case PMGameEngine.OBJ_TYPE_ROCK:
-					gl.glMatrixMode(GL10.GL_MODELVIEW);
-					gl.glLoadIdentity();
-					gl.glPushMatrix();
-					gl.glScalef(.25f, .25f, 1f);
-					environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed;
-					gl.glTranslatef(environmentObjects[index].posX,
-							environmentObjects[index].posY, 0f);
-					//Load up texture mode and select the current texture.
-					gl.glMatrixMode(GL10.GL_TEXTURE);
-					gl.glLoadIdentity();
-					gl.glTranslatef(0.0f, 0.0f, 0.0f);
-					environmentObjects[0].draw(gl, spriteSheets);
-					gl.glPopMatrix();
-					gl.glLoadIdentity();	
-					break;
-				case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
-					drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_UPWRD_CAR);
-					break;
-				case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
-					drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_DWNWRD_CAR);
-					break;
-				}
+			switch(environmentObjects[index].enviroType){
+			case PMGameEngine.OBJ_TYPE_ROCK:
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.25f, .25f, 1f);
+				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed;
+				gl.glTranslatef(environmentObjects[index].posX,
+						environmentObjects[index].posY, 0f);
+				//Load up texture mode and select the current texture.
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.0f, 0.0f, 0.0f);
+				environmentObjects[0].draw(gl, spriteSheets);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();	
+				break;
+			case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+				drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_UPWRD_CAR);
+				break;
+			case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+				drawCarColor(gl, index, PMGameEngine.OBJ_TYPE_DWNWRD_CAR);
+				break;
 			}
-			//Object fell off screen or had not been drawn.
+			//Object fell off screen.
 			if (environmentObjects[index].posY <= -1 
-					|| environmentObjects[index].posY >= 8.5
-					|| !environmentObjects[index].drawEnviroObject){
+					|| environmentObjects[index].posY >= 8.5){
 				environmentObjects[index].initializeEnvironmentVariables();
 			}
 		}

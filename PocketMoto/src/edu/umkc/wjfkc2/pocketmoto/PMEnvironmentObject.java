@@ -16,7 +16,6 @@ import javax.microedition.khronos.opengles.GL10;
 public class PMEnvironmentObject {
 	public float posY = 0f;
 	public float posX = 0f;
-	public boolean drawEnviroObject = false;
 	public int enviroType = 0;
 	public int carColor = -1;
 	
@@ -54,7 +53,6 @@ public class PMEnvironmentObject {
 	 */
 	public void initializeEnvironmentVariables(){
 		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
-		drawEnviroObject = random.nextBoolean();
 		switch(enviroType){
 		case PMGameEngine.OBJ_TYPE_ROCK:
 			carColor = -1; //Used for error detection.
