@@ -60,23 +60,23 @@ public class PMEnvironmentObject {
 			switch(rockSide){
 			case LEFT_ROCK:
 				posX = 0f;
-				posY = (random.nextFloat() * 4) + 4;
+				posY = (random.nextFloat() * 4) + 6;
 				break;
 			case RIGHT_ROCK:
 				posX = 3f;
-				posY = (random.nextFloat() * 4) + 4;
+				posY = (random.nextFloat() * 4) + 6;
 				break;
 			}
 			break;
 		case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
 			carColor = random.nextInt(4);
 			posX = 2.0f;
-			posY = (random.nextFloat() * 4) + 4;
+			posY = (random.nextFloat() * 4) + 6;
 			break;
 		case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
 			carColor = random.nextInt(4);
 			posX = 1.0f;
-			posY = (random.nextFloat() * 4) + 4;
+			posY = (random.nextFloat() * 4) + 6;
 			break;
 		}
 	}

@@ -43,12 +43,12 @@ public class PMGameRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
+		detectInitialEnviroCollisions();
 		moveEnvironmentObjects(gl);
 		movePlayer1(gl);
 		//My own function calls.
 		showButtons(gl);
 		
-		detectInitialEnviroCollisions();
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
@@ -61,78 +61,69 @@ public class PMGameRenderer implements Renderer {
 	 *  redrawn.
 	 *  This function is a heavily modified version of DiMarzio's
 	 *  detectCollisions() function.
-	 *  TODO: WORKS MOST OF THE TIME THERE ARE SOME BUGS!!!
 	 */
 	private void detectInitialEnviroCollisions(){
-		for (int i = 0; i < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; i++){
-			/* Only need to check if the object is drawn & is off the screen.
-			 * Environment objects will not collide after being drawn on screen.
-			 */
-			if (environmentObjects[i].posY > 4){
-				//Determine the initial object's type.
-				switch(environmentObjects[i].enviroType){
-				case PMGameEngine.OBJ_TYPE_ROCK:
-					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
-						if (i != j){
-							//Objects will only collide if they are the same type.
-							if (environmentObjects[j].posY > 4
-									&& environmentObjects[j].enviroType 
-									== PMGameEngine.OBJ_TYPE_ROCK){
-								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
-										&& environmentObjects[i].posY <= environmentObjects[j].posY)
-										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
-										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
-									//Collision occurred reinitialize object.
-									environmentObjects[i].initializeEnvironmentVariables();
-								}
-								
+		for (int i = 0; i < PMGameEngine.MAX_ENVIRO_OBJECTS; i++){
+			//Determine the initial object's type.
+			switch(environmentObjects[i].enviroType){
+			case PMGameEngine.OBJ_TYPE_ROCK:
+				for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS; j++){
+					if (i != j){
+						//Objects will only collide if they are the same type.
+						if (environmentObjects[j].enviroType 
+								== PMGameEngine.OBJ_TYPE_ROCK){
+							if((environmentObjects[i].posY >= environmentObjects[j].posY - 1
+									&& environmentObjects[i].posY <= environmentObjects[j].posY)
+									&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1
+									&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+								//Collision occurred reinitialize object.
+								environmentObjects[i].initializeEnvironmentVariables();
 							}
+							
 						}
 					}
-					break;
-				case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
-					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
-						if (i != j){
-							//Objects will only collide if they are the same type.
-							if (environmentObjects[j].posY > 4
-									&& environmentObjects[j].enviroType
-									== PMGameEngine.OBJ_TYPE_UPWRD_CAR){
-								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
-										&& environmentObjects[i].posY <= environmentObjects[j].posY)
-										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
-										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
-									//Collision occurred reinitialize object.
-									environmentObjects[i].initializeEnvironmentVariables();
-								}
-							}	
-						}
-					}
-					break;
-				case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
-					for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; j++){
-						if (i != j){
-							//Objects will only collide if they are the same type.
-							if (environmentObjects[j].posY > 4
-									&& environmentObjects[j].enviroType
-									== PMGameEngine.OBJ_TYPE_DWNWRD_CAR){
-								if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
-										&& environmentObjects[i].posY <= environmentObjects[j].posY)
-										&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1.75
-										&& environmentObjects[i].posX >= environmentObjects[j].posX)){
-									//Collision occurred reinitialize object.
-									environmentObjects[i].initializeEnvironmentVariables();
-								}
-							}	
-						}
-					}
-					break;
 				}
+				break;
+			case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+				for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS; j++){
+					if (i != j){
+						//Objects will only collide if they are the same type.
+						if (environmentObjects[j].enviroType
+								== PMGameEngine.OBJ_TYPE_UPWRD_CAR){
+							if((environmentObjects[i].posY >= environmentObjects[j].posY - 1
+									&& environmentObjects[i].posY <= environmentObjects[j].posY)
+									&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1
+									&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+								//Collision occurred reinitialize object.
+								environmentObjects[i].initializeEnvironmentVariables();
+							}
+						}	
+					}
+				}
+				break;
+			case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+				for (int j = 0; j < PMGameEngine.MAX_ENVIRO_OBJECTS; j++){
+					if (i != j){
+						//Objects will only collide if they are the same type.
+						if (environmentObjects[j].enviroType
+								== PMGameEngine.OBJ_TYPE_DWNWRD_CAR){
+							if((environmentObjects[i].posY >= environmentObjects[j].posY - 1.75
+									&& environmentObjects[i].posY <= environmentObjects[j].posY)
+									&& (environmentObjects[i].posX <= environmentObjects[j].posX + 1
+									&& environmentObjects[i].posX >= environmentObjects[j].posX)){
+								//Collision occurred reinitialize object.
+								environmentObjects[i].initializeEnvironmentVariables();
+							}
+						}	
+					}
+				}
+				break;
 			}
 		}
 	}
 	/** Initializes environment objects. */
 	private void initializeEnvironment(){
-		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS - 1; index++){
+		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS; index++){
 			environmentObjects[index] = new PMEnvironmentObject();
 			environmentObjects[index].initializeEnvironmentVariables();
 		}
@@ -142,7 +133,7 @@ public class PMGameRenderer implements Renderer {
 	 *  modified to fit my game.
 	 */
 	private void moveEnvironmentObjects(GL10 gl){
-		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS -1; index++){
+		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS; index++){
 			switch(environmentObjects[index].enviroType){
 			case PMGameEngine.OBJ_TYPE_ROCK:
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -168,8 +159,8 @@ public class PMGameRenderer implements Renderer {
 				break;
 			}
 			//Object fell off screen.
-			if (environmentObjects[index].posY <= -1 
-					|| environmentObjects[index].posY >= 8.5){
+			if (environmentObjects[index].posY <= -2 
+					|| environmentObjects[index].posY >= 11){
 				environmentObjects[index].initializeEnvironmentVariables();
 			}
 		}
