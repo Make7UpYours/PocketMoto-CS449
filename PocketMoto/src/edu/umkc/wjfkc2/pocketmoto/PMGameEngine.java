@@ -29,7 +29,7 @@ public class PMGameEngine {
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
-	public static float curPlayerPosX = 3.1f; //Keep track of the player's current x coord.
+	public static float curPlayerPosX = 2f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
 	public static float playerBikeHandling = 0.001f;
 	public static float playerBikeAcceleration = 0.0015f;
@@ -38,6 +38,7 @@ public class PMGameEngine {
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
 	public static final int ENVIRONMENT_OBJECTS = R.drawable.environment;
 	public static final int NUM_SPRITESHEETS = 3;
+	public static final float PLAYER_Y_POS = .275f;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;

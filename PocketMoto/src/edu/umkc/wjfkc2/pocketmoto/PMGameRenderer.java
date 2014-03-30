@@ -1,5 +1,7 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
+import java.util.Random;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -43,18 +45,115 @@ public class PMGameRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
-		detectInitialEnviroCollisions();
 		moveEnvironmentObjects(gl);
 		movePlayer1(gl);
 		//My own function calls.
 		showButtons(gl);
 		
+		detectInitialEnviroCollisions();
+		detectPlayerCollisions();
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	/** Detects collisions between the player and environment objects. Takes
+	 *  into account four points on the player texture image to test for collisions.
+	 *  The numbers in the if blocks were calculated from the scale and position of
+	 *  the texture images.
+	 *  CHANGING THE SCALE OR TEXTURE WILL AFFECT THE NUMERICAL VALUES IN THE IF
+	 *  STATEMENTS!!!
+	 *  This method was designed by myself.
+	 */
+	private void detectPlayerCollisions(){
+		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS; index++){
+			//Take into account the difference between enviroType image sizes.
+			switch(environmentObjects[index].enviroType){
+			case PMGameEngine.OBJ_TYPE_ROCK:
+				if (((PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 0.875f
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.475f)
+						&& (PMGameEngine.curPlayerPosX + 0.25f <= environmentObjects[index].posX + 0.90625f
+						&& PMGameEngine.curPlayerPosX + 0.25f >= environmentObjects[index].posX + 0.1171875f))
+						//Take into account the upper right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 0.875f
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.475f)
+						&& (PMGameEngine.curPlayerPosX + 0.75f <= environmentObjects[index].posX + 0.90625f
+						&& PMGameEngine.curPlayerPosX + 0.75f >= environmentObjects[index].posX+ 0.1171875f)
+						//Take into account the lower left origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 0.875f
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.475f)
+						&& (PMGameEngine.curPlayerPosX + 0.390625f <= environmentObjects[index].posX + 0.90625f
+						&& PMGameEngine.curPlayerPosX + 0.390625f >= environmentObjects[index].posX+ 0.1171875f)
+						//Take into account the lower right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 0.875f
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.475f)
+						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.90625f
+						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX+ 0.1171875f)){
+					//Player has collided with environment
+					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//Temp collision event, transport player to new random position.
+					Random rand = new Random();
+					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+				}
+				break;
+			case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
+				if (((PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.25f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.25f >= environmentObjects[index].posX + 0.171875f))
+						//Take into account the upper right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.75f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.75f >= environmentObjects[index].posX + 0.171875f)
+						//Take into account the lower left origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.390625f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.390625f >= environmentObjects[index].posX + 0.171875f)
+						//Take into account the lower right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
+					//Player has collided with environment
+					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//Temp collision event, transport player to new random position.
+					Random rand = new Random();
+					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+				}
+				break;
+			case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
+				if (((PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.25f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.25f >= environmentObjects[index].posX + 0.171875f))
+						//Take into account the upper right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.0625f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.0625f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.75f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.75f >= environmentObjects[index].posX + 0.171875f)
+						//Take into account the lower left origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.390625f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.390625f >= environmentObjects[index].posX + 0.171875f)
+						//Take into account the lower right origin point of the player image.
+						|| (PMGameEngine.PLAYER_Y_POS - 0.921875f >= environmentObjects[index].posY - 1
+						&& PMGameEngine.PLAYER_Y_POS - 0.921875f <= environmentObjects[index].posY - 0.03125f)
+						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.828125f
+						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
+					//Player has collided with environment
+					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//Temp collision event, transport player to new random position.
+					Random rand = new Random();
+					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+				}
+				break;
+			}
+		}
 	}
 	/** Detects collision events between environmental objects before they
 	 *  appear on screen. If a collision does occur then the object will be
@@ -407,9 +506,9 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(.175f,  .175f,  1f);
+		gl.glScalef(.25f, .25f,  1f);
 		//Place player the default x and y positions.
-		gl.glTranslatef(PMGameEngine.curPlayerPosX, .375f, 0f);
+		gl.glTranslatef(PMGameEngine.curPlayerPosX, PMGameEngine.PLAYER_Y_POS, 0f);
 		//Draw player texture to screen & pop matrix off the stack.
 		player1.draw(gl, spriteSheets);
 		gl.glPopMatrix();
