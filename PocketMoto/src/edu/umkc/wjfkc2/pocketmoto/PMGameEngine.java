@@ -29,10 +29,16 @@ public class PMGameEngine {
 	public static Context context;
 	public static Thread musicThread;
 	public static Display display;
+	
+	//0.1375 is max scroll speed before screen bugs out.
+	public static final float MAX_BIKE_SPEED = 0.1375f;
 	public static float curPlayerPosX = 2f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
 	public static float playerBikeHandling = 0.001f;
 	public static float playerBikeAcceleration = 0.0015f;
+	public static float playerBikeSpeed = 0.0625f;
+	public static float curPlayerBikeAcceleration;
+	public static float curPlayerBikeSpeed;
 	
 	//My own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
@@ -57,8 +63,6 @@ public class PMGameEngine {
 	public static final int RED_CAR = 2;
 	public static final int GREEN_CAR = 3;
 	
-	//0.1375 is max scroll speed before screen bugs out.
-	public static final float MAX_BIKE_SPEED = 0.1375f;
 	//Constants to keep track of player actions.
 	public static final int PLAYER_THROTTLE = 1;
 	public static final int PLAYER_BRAKE = 2;

@@ -35,13 +35,15 @@ public class PMGameRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		//Ensure that the game runs at 60 fps.
 		loopStart = System.currentTimeMillis();
-		try {
+		/* Comment out for now, seems to be causing game to run choppy.
+		 * Need more understanding of how this block works.
+		 * try {
 			if (loopRunTime < PMGameEngine.GAME_THREAD_FPS_SLEEP){
 				Thread.sleep(PMGameEngine.GAME_THREAD_FPS_SLEEP);
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
@@ -421,6 +423,35 @@ public class PMGameRenderer implements Renderer {
 			}	
 		}
 	}
+	/** Determines if the player has run off the road.
+	 *  If the player is off-road then reduce their acceleration and speed.
+	 *  Method will slow down the player gradually when the bike is off-road.
+	 *  This method was designed by myself.
+	 */
+	//TODO: MAY NEED TO TWEAK NUMBER VALUES AFTER GAMEPLAY TESTING!!!
+	private void detectOffRoad(){
+		if ((PMGameEngine.curPlayerPosX + 0.4f < 1)
+				|| (PMGameEngine.curPlayerPosX + 0.6f > 3)){
+			//Player has gone off-road, reduce speed and acceleration.
+			PMGameEngine.curPlayerBikeSpeed = PMGameEngine.playerBikeSpeed / 2;
+			PMGameEngine.curPlayerBikeAcceleration = PMGameEngine.playerBikeAcceleration / 2;
+			if (PMGameEngine.backgroundScrollSpeed 
+					< (PMGameEngine.curPlayerBikeSpeed - PMGameEngine.curPlayerBikeAcceleration)){
+				PMGameEngine.backgroundScrollSpeed += PMGameEngine.curPlayerBikeAcceleration;
+			}else if (PMGameEngine.backgroundScrollSpeed > PMGameEngine.curPlayerBikeSpeed){
+				//Gradually slow down the player when they go off-road.
+				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling / 2;
+			}
+		}else{
+			//Player on-road, bring curSpeed & curAcceleration back to normal values.
+			PMGameEngine.curPlayerBikeSpeed = PMGameEngine.playerBikeSpeed;
+			PMGameEngine.curPlayerBikeAcceleration = PMGameEngine.playerBikeAcceleration;
+			if (PMGameEngine.backgroundScrollSpeed
+					< (PMGameEngine.curPlayerBikeSpeed - PMGameEngine.curPlayerBikeAcceleration)){
+				PMGameEngine.backgroundScrollSpeed += PMGameEngine.curPlayerBikeAcceleration;
+			}
+		}
+	}
 	/** Displays the proper animation for the movement control buttons.
 	 *  This function uses some code from DiMarzio, but only the OpenGL calls
 	 *  and the switch case design.
@@ -464,10 +495,8 @@ public class PMGameRenderer implements Renderer {
 			movementButtons.draw(gl, spriteSheets);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
-			//TODO REPLACE MAX_BIKE_SPEED WITH BIKE SPEED!!!
-			if (PMGameEngine.backgroundScrollSpeed < PMGameEngine.MAX_BIKE_SPEED){
-				PMGameEngine.backgroundScrollSpeed += PMGameEngine.playerBikeAcceleration;
-			}
+			//Determine the player's speed & acceleration.
+			detectOffRoad();
 			break;
 		case PMGameEngine.PLAYER_RELEASE:
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -501,6 +530,7 @@ public class PMGameRenderer implements Renderer {
 		}
 	}
 	/** Controls movement animation of the player character. */
+	//TODO: IMPLEMENT THROW EXCEPTION IF detectOffRoad() HAS NOT BEEN CALLED!!!
 	private void movePlayer1(GL10 gl){
 		//Load model matrix mode & scale by .25.
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
