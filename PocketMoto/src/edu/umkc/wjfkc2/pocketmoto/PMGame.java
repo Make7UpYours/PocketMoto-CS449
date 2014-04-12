@@ -1,6 +1,11 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -12,14 +17,43 @@ import android.view.MotionEvent;
  *  that are slightly modified numerically from J.F. DiMarzio's code
  *  and these will not be noted. 
  */
-public class PMGame extends Activity {
+public class PMGame extends Activity implements SensorEventListener {
 	private PMGameView gameView;
+	private SensorManager mSensorManager;
+	private Sensor mGyroSensor;
 
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		/*Initialize sensor detection.
+		 * Code was obtained from:
+		 * http://developer.android.com/guide/topics/sensors/sensors_position.html#sensors-pos-gamerot
+		 */
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mGyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 		gameView = new PMGameView(this);
 		setContentView(gameView);
+	}
+	/** Detect when the player rotates the device left or right.
+	 *  This method will be used to move the biker left & right.
+	 *  The faster the player rotates the screen, the faster the
+	 *  biker will move.
+	 */
+	@Override
+	public void onSensorChanged(SensorEvent event){
+		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+			float yAxisRot = event.values[1];
+			if (yAxisRot < -(PMGameEngine.START_ROT_MOVEMENT)){
+				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_LEFT;
+				PMGameEngine.playerBikeTurnRate = yAxisRot;
+			}else if(yAxisRot > PMGameEngine.START_ROT_MOVEMENT){
+				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_RIGHT;
+				PMGameEngine.playerBikeTurnRate = yAxisRot;
+			}else{
+				//Screen is not rotating, return to default state.
+				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_NO_ROT;
+			}
+		}
 	}
 	/** Detect when the player touches the screen to move the character. */
 	@Override
@@ -58,12 +92,18 @@ public class PMGame extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mSensorManager.registerListener(this, mGyroSensor, SensorManager.SENSOR_DELAY_GAME);
 		gameView.onResume();
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mSensorManager.unregisterListener(this);
 		gameView.onPause();
+	}
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		//Do Nothing
 	}
 }

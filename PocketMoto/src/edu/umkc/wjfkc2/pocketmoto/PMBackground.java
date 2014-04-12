@@ -82,8 +82,11 @@ public class PMBackground {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	/** Loads in a texture, to be called at initialization. */
-	public void loadTexture(GL10 gl, int texture, Context context) {
+	/** Loads in a texture, to be called at initialization.
+	 *  Method throws a NullPointerException when it is passed an invalid
+	 *  texture parameter.
+	 */
+	public void loadTexture(GL10 gl, int texture, Context context) throws NullPointerException {
 		//Load texture into stream.
 		InputStream imagestream = context.getResources().openRawResource(texture);
 		Bitmap bitmap = null;

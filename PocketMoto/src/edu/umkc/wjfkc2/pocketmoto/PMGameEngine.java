@@ -23,7 +23,7 @@ public class PMGameEngine {
 	public static final int BACKGROUND_MUSIC = R.raw.drivenedit;
 	public static final int PLAYER_BIKE_SHEET = R.drawable.biker;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9; //Draw player every 9 gameloop iterations.
-	public static final int PLAYER_RELEASE = 3;
+	public static final float OBJECT_SCALE = 0.25f;
 	
 	//Game control variables
 	public static Context context;
@@ -32,9 +32,10 @@ public class PMGameEngine {
 	
 	//0.1375 is max scroll speed before screen bugs out.
 	public static final float MAX_BIKE_SPEED = 0.1375f;
+	public static final float BRAKE_SPEED_MODIFIER = 0.0525f;
 	public static float curPlayerPosX = 2f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
-	public static float playerBikeHandling = 0.001f;
+	public static float playerBikeHandling = 0.025f;
 	public static float playerBikeAcceleration = 0.0015f;
 	public static float playerBikeSpeed = 0.0625f;
 	public static float curPlayerBikeAcceleration;
@@ -63,11 +64,22 @@ public class PMGameEngine {
 	public static final int RED_CAR = 2;
 	public static final int GREEN_CAR = 3;
 	
-	//Constants to keep track of player actions.
+	//Constants to keep track of player actions for vertical movement.
 	public static final int PLAYER_THROTTLE = 1;
 	public static final int PLAYER_BRAKE = 2;
-	//My own variables.
+	public static final int PLAYER_RELEASE = 3;
+	
 	public static float backgroundScrollSpeed = 0; //Don't scroll at game start.
+	
+	//Screen rotation constants.
+	public static final float START_ROT_MOVEMENT = 0.075f;
+	
+	//Constants & vars to keep track of player actions for lateral movement.
+	public static int playerBikeLatAction = 0;
+	public static float playerBikeTurnRate = 0;
+	public static final int SCREEN_ROT_LEFT = 1;
+	public static final int SCREEN_ROT_RIGHT = 2;
+	public static final int SCREEN_NO_ROT = 0;
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {

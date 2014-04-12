@@ -21,8 +21,11 @@ public class PMTextures {
 	public PMTextures(GL10 gl){
 		gl.glGenTextures(PMGameEngine.NUM_SPRITESHEETS, textures, 0);
 	}
-	/** Loads textures and returns their texture array. */
-	public int[] loadTexture(GL10 gl, int texture, Context context, int textureNumber){
+	/** Loads textures and returns their texture array.
+	 *  Method throws a NullPointerException if it is passed an invalid
+	 *  textureNumber or texture parameter.
+	 */
+	public int[] loadTexture(GL10 gl, int texture, Context context, int textureNumber) throws NullPointerException{
 		//Obtain texture input stream.
 		InputStream imagestream = context.getResources().openRawResource(texture);
 		Bitmap bitmap = null;

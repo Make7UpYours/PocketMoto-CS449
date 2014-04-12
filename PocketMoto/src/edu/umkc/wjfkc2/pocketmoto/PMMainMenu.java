@@ -29,7 +29,7 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menuscreen);
 	    
-	  //Preserve muteMusic
+		//Preserve muteMusic
         if (savedInstanceState != null) {
 			muteMusic = savedInstanceState.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
 		}
@@ -49,8 +49,12 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		
 		View exitButton = findViewById(R.id.exitButton);
 		exitButton.setOnClickListener(this);
-		
-		checkMute();
+		try{
+			checkMute();	
+		}
+		catch(NullPointerException ex){
+			System.out.println("PMGameEngine.musicThread failed to start.");
+		}
 	}
 	
 	/** Preserves app data when paused. */
@@ -150,7 +154,7 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		}
 	}
 	/** Determines if the music should be played. */
-	private void checkMute() {
+	private void checkMute() throws NullPointerException {
 		//Check muteMusic & musicThread status.
 		if (muteMusic && PMMusic.isRunning){
 			PMMusic.player.pause();

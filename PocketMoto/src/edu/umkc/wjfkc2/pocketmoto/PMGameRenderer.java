@@ -23,12 +23,26 @@ public class PMGameRenderer implements Renderer {
 			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
 	private PMTextures textureLoader;
 	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
-	
+		
 	private long loopStart = 0;
 	private long loopEnd = 0;
 	private long loopRunTime = 0;
 	
 	private float bgScroll;
+	
+	public final class OutOfBounds extends Exception{
+		public OutOfBounds() {}
+		public OutOfBounds(String msg){
+			super(msg);
+		}
+	}
+	
+	public final class ObjectScaleError extends Exception{
+		public ObjectScaleError() {}
+		public ObjectScaleError(String msg){
+			super(msg);
+		}
+	}
 	
 	/** Primary Game Loop. */
 	@Override
@@ -47,10 +61,21 @@ public class PMGameRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
-		moveEnvironmentObjects(gl);
-		movePlayer1(gl);
+		try{
+			moveEnvironmentObjects(gl);
+			movePlayer1(gl);	
+		}
+		catch(ObjectScaleError ex){
+			System.out.println("PMGameEngine.OBJECT_SCALE HAS BEEN MODIFIED, COLLISION DETECTION WILL NOT WORK PROPERLY!!!");
+		}
 		//My own function calls.
 		showButtons(gl);
+		try{
+			movePlayer1Lat();	
+		}
+		catch (OutOfBounds ex){
+			System.out.println("Player has exceeded boundry limits.");
+		}
 		
 		detectInitialEnviroCollisions();
 		detectPlayerCollisions();
@@ -60,6 +85,38 @@ public class PMGameRenderer implements Renderer {
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	/** Determines if the screen is being rotated by the player.
+	 *  If the screen is being rotated, the method will update the
+	 *  biker's x position on screen.
+	 *  The rate at which the biker moves is modified by the bike's
+	 *  handling.
+	 *  If the biker somehow ends up going off screen, method will throw
+	 *  an OutOfBounds exception.
+	 */
+	private void movePlayer1Lat() throws OutOfBounds{
+		assert PMGameEngine.playerBikeHandling > 0:
+			"PMGameEngine.playerBikeHandling should be a positive value.";
+		switch(PMGameEngine.playerBikeLatAction){
+		case PMGameEngine.SCREEN_ROT_LEFT:
+			if(PMGameEngine.curPlayerPosX > 0){
+				PMGameEngine.curPlayerPosX += PMGameEngine.playerBikeTurnRate
+						* PMGameEngine.playerBikeHandling;
+			}
+			break;
+		case PMGameEngine.SCREEN_ROT_RIGHT:
+			if (PMGameEngine.curPlayerPosX < 3){
+				PMGameEngine.curPlayerPosX += PMGameEngine.playerBikeTurnRate
+						* PMGameEngine.playerBikeHandling;
+			}
+			break;
+		}
+		if (PMGameEngine.curPlayerPosX < -.875
+				|| PMGameEngine.curPlayerPosX > 3.125){
+			OutOfBounds boundryError =
+					new OutOfBounds("Somehow player fell off the screen!");
+			throw boundryError;
+		}
 	}
 	/** Detects collisions between the player and environment objects. Takes
 	 *  into account four points on the player texture image to test for collisions.
@@ -232,15 +289,19 @@ public class PMGameRenderer implements Renderer {
 	/** Iterates through each environmentObject & draws it on screen.
 	 *  Method is similar to moveEnemy() from DiMarzio but is heavily
 	 *  modified to fit my game.
+	 *  If for some reason PMGameEngine.OBJECT_SCALE gets changed from 0.25,
+	 *  this method will throw an ObjectScaleError exception.
+	 *  This exception adds additional error detection for collisions
 	 */
-	private void moveEnvironmentObjects(GL10 gl){
+	@SuppressWarnings("unused")
+	private void moveEnvironmentObjects(GL10 gl) throws ObjectScaleError{
 		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS; index++){
 			switch(environmentObjects[index].enviroType){
 			case PMGameEngine.OBJ_TYPE_ROCK:
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed;
 				gl.glTranslatef(environmentObjects[index].posX,
 						environmentObjects[index].posY, 0f);
@@ -265,6 +326,11 @@ public class PMGameRenderer implements Renderer {
 				environmentObjects[index].initializeEnvironmentVariables();
 			}
 		}
+		if (PMGameEngine.OBJECT_SCALE != 0.25f){
+			ObjectScaleError objectScaleError =
+					new ObjectScaleError("PMGameEngine.OBJECT_SCALE has been modified.");
+			throw objectScaleError;
+		}
 	}
 	/** Draws the correct color of the car and draws it on screen.
 	 *  I designed this function myself. There is absolutely no
@@ -277,7 +343,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in upward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						- PMGameEngine.CAR_SPEED; 
@@ -295,7 +361,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in upward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						- PMGameEngine.CAR_SPEED; 
@@ -313,7 +379,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in upward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						- PMGameEngine.CAR_SPEED; 
@@ -331,7 +397,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in upward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						- PMGameEngine.CAR_SPEED; 
@@ -352,7 +418,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in downward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						+ PMGameEngine.CAR_SPEED;
@@ -370,7 +436,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in downward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						+ PMGameEngine.CAR_SPEED;
@@ -388,7 +454,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in downward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						+ PMGameEngine.CAR_SPEED;
@@ -406,7 +472,7 @@ public class PMGameRenderer implements Renderer {
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
-				gl.glScalef(.25f, .25f, 1f);
+				gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
 				//Car always moves in downward direction.
 				environmentObjects[index].posY -= PMGameEngine.backgroundScrollSpeed
 						+ PMGameEngine.CAR_SPEED;
@@ -476,7 +542,8 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			//Slow scroll speed but prevent negative scroll values.
 			if (PMGameEngine.backgroundScrollSpeed > 0){
-				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling;
+				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling
+						* PMGameEngine.BRAKE_SPEED_MODIFIER;
 			} else{
 				PMGameEngine.backgroundScrollSpeed = 0;
 			}
@@ -511,7 +578,8 @@ public class PMGameRenderer implements Renderer {
 			//Slow scroll speed but prevent negative scroll values.
 			if (PMGameEngine.backgroundScrollSpeed > 0){
 				//Engine bogs down at a lesser rate than braking
-				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling / 2;
+				PMGameEngine.backgroundScrollSpeed -= PMGameEngine.playerBikeHandling
+						* (PMGameEngine.BRAKE_SPEED_MODIFIER / 2);
 			} else{
 				PMGameEngine.backgroundScrollSpeed = 0;
 			}
@@ -529,24 +597,35 @@ public class PMGameRenderer implements Renderer {
 			break;
 		}
 	}
-	/** Controls movement animation of the player character. */
-	//TODO: IMPLEMENT THROW EXCEPTION IF detectOffRoad() HAS NOT BEEN CALLED!!!
-	private void movePlayer1(GL10 gl){
+	/** Controls movement animation of the player character. 
+	 *  If for some reason PMGameEngine.OBJECT_SCALE gets changed from 0.25,
+	 *  this method will throw an ObjectScaleError exception.
+	 *  This exception adds additional error detection for collisions
+	 */
+	@SuppressWarnings("unused")
+	private void movePlayer1(GL10 gl) throws ObjectScaleError{
 		//Load model matrix mode & scale by .25.
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(.25f, .25f,  1f);
+		gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE,  1f);
 		//Place player the default x and y positions.
 		gl.glTranslatef(PMGameEngine.curPlayerPosX, PMGameEngine.PLAYER_Y_POS, 0f);
 		//Draw player texture to screen & pop matrix off the stack.
 		player1.draw(gl, spriteSheets);
 		gl.glPopMatrix();
 		gl.glLoadIdentity();
+		if (PMGameEngine.OBJECT_SCALE != 0.25f){
+			ObjectScaleError objectScaleError =
+					new ObjectScaleError("PMGameEngine.OBJECT_SCALE has been modified.");
+			throw objectScaleError;
+		}
 	}
-	/** Scrolls the stars background image. */
+	/** Scrolls the background image. */
 	private void scrollBackground(GL10 gl) {
 		//Prevent bgScroll1 from exceeding a max float value.
+		assert bgScroll < Float.MAX_VALUE:
+			"bgScroll has exceeded the max value of a float.";
 		if (bgScroll == Float.MAX_VALUE){
 			bgScroll = 0f;
 		}
@@ -594,12 +673,17 @@ public class PMGameRenderer implements Renderer {
 		//Load up texture sheet.
 		textureLoader = new PMTextures(gl);
 		//Load sprite sheets.
-		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.PLAYER_BIKE_SHEET,
-				PMGameEngine.context, PMGameEngine.BIKE_SPRITE_INDEX + 1);
-		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS,
-				PMGameEngine.context, PMGameEngine.MOVEMENT_BUTTONS_INDEX + 1);
-		spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
-				PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);
+		try{
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.PLAYER_BIKE_SHEET,
+					PMGameEngine.context, PMGameEngine.BIKE_SPRITE_INDEX + 1);
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS,
+					PMGameEngine.context, PMGameEngine.MOVEMENT_BUTTONS_INDEX + 1);
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
+					PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);	
+		}
+		catch(NullPointerException e){
+			System.out.println("Failed to load sprite textures.");
+		}
 		
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glClearDepthf(1.0f);
@@ -607,8 +691,13 @@ public class PMGameRenderer implements Renderer {
 		gl.glDepthFunc(GL10.GL_LEQUAL);
 		
 		//Load textures for background image
-		grassBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_ONE, PMGameEngine.context);
-		roadBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_TWO, PMGameEngine.context);
+		try{
+			grassBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_ONE, PMGameEngine.context);
+			roadBackground.loadTexture(gl, PMGameEngine.BACKGROUND_LAYER_TWO, PMGameEngine.context);	
+		}
+		catch(NullPointerException e){
+			System.out.println("Failed to load background textures.");
+		}
 		
 		initializeEnvironment();
 	}

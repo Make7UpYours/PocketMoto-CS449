@@ -53,9 +53,10 @@ public class PMEnvironmentObject {
 	 */
 	public void initializeEnvironmentVariables(){
 		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
+		assert enviroType < PMGameEngine.NUM_ENVIRO_TYPES:
+			"PMEnvironmentObject.enviroType has generated an invalid int.";
 		switch(enviroType){
 		case PMGameEngine.OBJ_TYPE_ROCK:
-			carColor = -1; //Used for error detection.
 			int rockSide = random.nextInt(2);
 			switch(rockSide){
 			case LEFT_ROCK:
