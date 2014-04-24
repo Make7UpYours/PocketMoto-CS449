@@ -5,6 +5,8 @@ import java.util.Random;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import junit.framework.Assert;
+
 import android.opengl.GLSurfaceView.Renderer;
 
 /** Renders game images.
@@ -14,10 +16,12 @@ import android.opengl.GLSurfaceView.Renderer;
  *  that are slightly modified numerically from J.F. DiMarzio's code
  *  and these will not be noted. 
  */
+//TODO: IMPLEMENT FUNCTIONALITY TO DRAW PLAYER SUIT ON TOP OF BIKE
 public class PMGameRenderer implements Renderer {
 	private PMBackground grassBackground = new PMBackground();
 	private PMBackground roadBackground = new PMBackground();
-	private PMBiker player1 = new PMBiker();
+	private PMBike playerBike = new PMBike();
+	private PMSuit playerSuit = new PMSuit();
 	private PMMovementControl movementButtons = new PMMovementControl();
 	private PMEnvironmentObject[] environmentObjects =
 			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
@@ -44,6 +48,13 @@ public class PMGameRenderer implements Renderer {
 		}
 	}
 	
+	public final class ColorError extends Exception{
+		public ColorError() {}
+		public ColorError(String msg){
+			super(msg);
+		}
+	}
+	
 	/** Primary Game Loop. */
 	@Override
 	public void onDrawFrame(GL10 gl) {
@@ -61,22 +72,15 @@ public class PMGameRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
+		drawPlayer1(gl);
 		try{
-			moveEnvironmentObjects(gl);
-			movePlayer1(gl);	
+			moveEnvironmentObjects(gl);	
 		}
 		catch(ObjectScaleError ex){
 			System.out.println("PMGameEngine.OBJECT_SCALE HAS BEEN MODIFIED, COLLISION DETECTION WILL NOT WORK PROPERLY!!!");
 		}
 		//My own function calls.
-		showButtons(gl);
-		try{
-			movePlayer1Lat();	
-		}
-		catch (OutOfBounds ex){
-			System.out.println("Player has exceeded boundry limits.");
-		}
-		
+		showButtons(gl);		
 		detectInitialEnviroCollisions();
 		detectPlayerCollisions();
 		
@@ -86,6 +90,22 @@ public class PMGameRenderer implements Renderer {
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
 	}
+	
+	private void drawPlayer1(GL10 gl){
+		try{
+			drawBike(gl);
+			drawSuit(gl);
+		}
+		catch(ObjectScaleError ex){
+			System.out.println("PMGameEngine.OBJECT_SCALE HAS BEEN MODIFIED, COLLISION DETECTION WILL NOT WORK PROPERLY!!!");
+		}
+		try{
+			movePlayer1Lat();	
+		}
+		catch (OutOfBounds ex){
+			System.out.println("Player has exceeded boundry limits.");
+		}
+	}
 	/** Determines if the screen is being rotated by the player.
 	 *  If the screen is being rotated, the method will update the
 	 *  biker's x position on screen.
@@ -93,10 +113,12 @@ public class PMGameRenderer implements Renderer {
 	 *  handling.
 	 *  If the biker somehow ends up going off screen, method will throw
 	 *  an OutOfBounds exception.
+	 *  Uses an assert to verify that PMGameEngine.playerBikeHandling is
+	 *  not a negative value.
 	 */
 	private void movePlayer1Lat() throws OutOfBounds{
-		assert PMGameEngine.playerBikeHandling > 0:
-			"PMGameEngine.playerBikeHandling should be a positive value.";
+		Assert.assertTrue("PMGameEngine.playerBikeHandling should be a positive value.",
+				PMGameEngine.playerBikeHandling > 0);
 		switch(PMGameEngine.playerBikeLatAction){
 		case PMGameEngine.SCREEN_ROT_LEFT:
 			if(PMGameEngine.curPlayerPosX > 0){
@@ -597,28 +619,126 @@ public class PMGameRenderer implements Renderer {
 			break;
 		}
 	}
-	/** Controls movement animation of the player character. 
+	/** Draws the bike in the correct location of the screen.
 	 *  If for some reason PMGameEngine.OBJECT_SCALE gets changed from 0.25,
 	 *  this method will throw an ObjectScaleError exception.
 	 *  This exception adds additional error detection for collisions
 	 */
 	@SuppressWarnings("unused")
-	private void movePlayer1(GL10 gl) throws ObjectScaleError{
+	private void drawBike(GL10 gl) throws ObjectScaleError{
 		//Load model matrix mode & scale by .25.
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE,  1f);
-		//Place player the default x and y positions.
+		gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
+		//Update player's position.
 		gl.glTranslatef(PMGameEngine.curPlayerPosX, PMGameEngine.PLAYER_Y_POS, 0f);
+		//Select the proper texture in the sprite sheet.
+		loadBikeTexture(gl);
 		//Draw player texture to screen & pop matrix off the stack.
-		player1.draw(gl, spriteSheets);
+		playerBike.draw(gl, spriteSheets);
 		gl.glPopMatrix();
 		gl.glLoadIdentity();
 		if (PMGameEngine.OBJECT_SCALE != 0.25f){
 			ObjectScaleError objectScaleError =
 					new ObjectScaleError("PMGameEngine.OBJECT_SCALE has been modified.");
 			throw objectScaleError;
+		}
+	}
+	/** Draws the suit in the correct location of the screen.
+	 *  If for some reason PMGameEngine.OBJECT_SCALE gets changed from 0.25,
+	 *  this method will throw an ObjectScaleError exception.
+	 *  This exception adds additional error detection for collisions
+	 */
+	@SuppressWarnings("unused")
+	private void drawSuit(GL10 gl) throws ObjectScaleError{
+		//Load model matrix mode & scale by .25.
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(PMGameEngine.OBJECT_SCALE, PMGameEngine.OBJECT_SCALE, 1f);
+		//Update player's position.
+		gl.glTranslatef(PMGameEngine.curPlayerPosX, PMGameEngine.PLAYER_Y_POS, 0f);
+		//Select the proper texture in the sprite sheet.
+		loadSuitTexture(gl);
+		//Draw player texture to screen & pop matrix off the stack.
+		playerSuit.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+		if (PMGameEngine.OBJECT_SCALE != 0.25f){
+			ObjectScaleError objectScaleError =
+					new ObjectScaleError("PMGameEngine.OBJECT_SCALE has been modified.");
+			throw objectScaleError;
+		}
+	}
+	/** Selects the proper bike image from the bike sprite sheet based upon
+	 *  the current bike color selection.
+	 *  Method makes use of assertions to verify that playerBike.bikeColor has
+	 *  not been set to an improper value.
+	 */
+	private void loadBikeTexture(GL10 gl){
+		Assert.assertTrue("playerBike.bikeColor exceeds PMGameEngine.NUM_BIKES.",
+				playerBike.bikeColor < PMGameEngine.NUM_BIKES);
+		Assert.assertTrue("playerBike.bikeColor is less than 0.",
+				playerBike.bikeColor >= 0);
+		switch(playerBike.bikeColor){
+		case PMGameEngine.RED_BIKE:
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.0f, 0.0f);
+			break;
+		case PMGameEngine.PURPLE_BIKE:
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.25f, 0.0f);
+			break;
+		case PMGameEngine.YELLOW_BIKE:
+			//Load up texture mode and select the current texture.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.5f, 0.0f);
+			break;
+		case PMGameEngine.GREEN_BIKE:
+			//Load up texture mode and select the current texture.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.75f, 0.0f);
+			break;
+		}
+	}
+	/** Selects the proper suit image from the bike sprite sheet based upon
+	 *  the current suit color selection.
+	 *  Method makes use of assertions to verify that playerBike.bikeColor has
+	 *  not been set to an improper value.
+	 */
+	private void loadSuitTexture(GL10 gl){
+		Assert.assertTrue("playerSuit.suitColor exceeds PMGameEngine.NUM_SUITS.",
+				playerSuit.suitColor < PMGameEngine.NUM_SUITS);
+		Assert.assertTrue("playerSuit.suitColor is less than 0.",
+				playerSuit.suitColor >= 0);
+		switch(playerSuit.suitColor){
+		case PMGameEngine.BLUE_SUIT:
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.0f, 0.0f);
+			break;
+		case PMGameEngine.GREY_SUIT:
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.25f, 0.0f);
+			break;
+		case PMGameEngine.ORANGE_SUIT:
+			//Load up texture mode and select the current texture.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.5f, 0.0f);
+			break;
+		case PMGameEngine.NEON_SUIT:
+			//Load up texture mode and select the current texture.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, 0.75f, 0.0f);
+			break;
 		}
 	}
 	/** Scrolls the background image. */
@@ -679,7 +799,9 @@ public class PMGameRenderer implements Renderer {
 			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.MOVEMENT_BUTTONS,
 					PMGameEngine.context, PMGameEngine.MOVEMENT_BUTTONS_INDEX + 1);
 			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.ENVIRONMENT_OBJECTS,
-					PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);	
+					PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.PLAYER_SUIT_SHEET,
+					PMGameEngine.context, PMGameEngine.SUIT_SPRITE_INDEX + 1);
 		}
 		catch(NullPointerException e){
 			System.out.println("Failed to load sprite textures.");

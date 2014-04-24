@@ -21,7 +21,8 @@ public class PMGameEngine {
 	public static final int BACKGROUND_LAYER_ONE = R.drawable.grass;
 	public static final int BACKGROUND_LAYER_TWO = R.drawable.road;
 	public static final int BACKGROUND_MUSIC = R.raw.drivenedit;
-	public static final int PLAYER_BIKE_SHEET = R.drawable.biker;
+	public static final int PLAYER_BIKE_SHEET = R.drawable.bikes;
+	public static final int PLAYER_SUIT_SHEET = R.drawable.biker;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9; //Draw player every 9 gameloop iterations.
 	public static final float OBJECT_SCALE = 0.25f;
 	
@@ -44,13 +45,14 @@ public class PMGameEngine {
 	//My own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
 	public static final int ENVIRONMENT_OBJECTS = R.drawable.environment;
-	public static final int NUM_SPRITESHEETS = 3;
+	public static final int NUM_SPRITESHEETS = 4;
 	public static final float PLAYER_Y_POS = .275f;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;
 	public static final int MOVEMENT_BUTTONS_INDEX = 1;
 	public static final int ENVIRONMENT_SPRITE_INDEX = 2;
+	public static final int SUIT_SPRITE_INDEX = 3;
 	
 	//EnvironmentObject constants.
 	public static final int MAX_ENVIRO_OBJECTS = 4;
@@ -80,6 +82,20 @@ public class PMGameEngine {
 	public static final int SCREEN_ROT_LEFT = 1;
 	public static final int SCREEN_ROT_RIGHT = 2;
 	public static final int SCREEN_NO_ROT = 0;
+	
+	//Bike & player selection variables & constants.
+	public static int curPlayerSuit = 3;
+	public static int curPlayerBike = 3;
+	public static final int NUM_BIKES = 4;
+	public static final int NUM_SUITS = 4;
+	public static final int RED_BIKE = 0;
+	public static final int PURPLE_BIKE = 1;
+	public static final int YELLOW_BIKE = 2;
+	public static final int GREEN_BIKE = 3;
+	public static final int BLUE_SUIT = 0;
+	public static final int GREY_SUIT = 1;
+	public static final int ORANGE_SUIT = 2;
+	public static final int NEON_SUIT = 3;
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {
