@@ -1,5 +1,6 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
+import junit.framework.Assert;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.view.View.OnClickListener;
  *  by J.F. DiMarzio
  *  It will be noted where his code is used. 
  */
+//TODO:SAVE PRECIOUS DATA AND DESIGN STORE MENUS!!!
 public class PMMainMenu extends Activity implements OnClickListener {
 	final PMGameEngine engine = new PMGameEngine(); //From J.F. DiMarzio.
 	static final private int MUTE_MUSIC = Menu.FIRST;
@@ -22,13 +24,24 @@ public class PMMainMenu extends Activity implements OnClickListener {
 	private static final String PREFS_NAME = "PrefsFile";
 	private static final String MUTE_MUSIC_ATTRIBUTE_NAME = "musicMute";
 	private boolean muteMusic;
-	
+	PMStoreFunc storeFunc = new PMStoreFunc();
 	/** Called when the activity if first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menuscreen);
-	    
+		//USING TEST DRIVEN DEVELOPMENT FOR EQUIPING FUNCTIONALITY!!!
+		//Need to use the UI and decided this was the best route.
+		for (int index = 0; index < 4; index++){
+			PMGameEngine.purchasedBikes[index] = index;
+			PMGameEngine.purchasedSuits[index] = index;
+		}
+		PMGameEngine.numPurchasedBikes = 4;
+		PMGameEngine.numPurchasedSuits = 4;
+		Assert.assertTrue(storeFunc.equipBike(1));
+		Assert.assertTrue(storeFunc.equipSuit(2));
+		//Game crashes if test fails!!!
+		
 		//Preserve muteMusic
         if (savedInstanceState != null) {
 			muteMusic = savedInstanceState.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);

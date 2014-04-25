@@ -16,7 +16,6 @@ import android.opengl.GLSurfaceView.Renderer;
  *  that are slightly modified numerically from J.F. DiMarzio's code
  *  and these will not be noted. 
  */
-//TODO: IMPLEMENT FUNCTIONALITY TO DRAW PLAYER SUIT ON TOP OF BIKE
 public class PMGameRenderer implements Renderer {
 	private PMBackground grassBackground = new PMBackground();
 	private PMBackground roadBackground = new PMBackground();

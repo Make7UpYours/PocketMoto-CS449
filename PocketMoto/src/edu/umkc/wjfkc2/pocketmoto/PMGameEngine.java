@@ -39,6 +39,8 @@ public class PMGameEngine {
 	public static float playerBikeHandling = 0.025f;
 	public static float playerBikeAcceleration = 0.0015f;
 	public static float playerBikeSpeed = 0.0625f;
+	public static float playerHP = 3;
+	public static float curPlayerHP;
 	public static float curPlayerBikeAcceleration;
 	public static float curPlayerBikeSpeed;
 	
@@ -84,8 +86,8 @@ public class PMGameEngine {
 	public static final int SCREEN_NO_ROT = 0;
 	
 	//Bike & player selection variables & constants.
-	public static int curPlayerSuit = 3;
-	public static int curPlayerBike = 3;
+	public static int curPlayerSuit;
+	public static int curPlayerBike;
 	public static final int NUM_BIKES = 4;
 	public static final int NUM_SUITS = 4;
 	public static final int RED_BIKE = 0;
@@ -96,6 +98,39 @@ public class PMGameEngine {
 	public static final int GREY_SUIT = 1;
 	public static final int ORANGE_SUIT = 2;
 	public static final int NEON_SUIT = 3;
+	
+	//Suit & bike stats.
+	public static final float TIER_1_HANDLING = 0.025f;
+	public static final float TIER_2_HANDLING = 0.035f;
+	public static final float TIER_3_HANDLING = 0.045f;
+	public static final float TIER_4_HANDLING = 0.055f;
+	public static final float TIER_1_ACCELERATION = 0.0005f;
+	public static final float TIER_2_ACCELERATION = 0.0010f;
+	public static final float TIER_3_ACCELERATION = 0.00125f;
+	public static final float TIER_4_ACCELERATION = 0.0015f;
+	public static final float TIER_1_SPEED = 0.0325f;
+	public static final float TIER_2_SPEED = 0.0425f;
+	public static final float TIER_3_SPEED = 0.0525f;
+	public static final float TIER_4_SPEED = 0.0625f;
+	public static final int TIER_1_HP = 3;
+	public static final int TIER_2_HP = 4;
+	public static final int TIER_3_HP = 5;
+	public static final int TIER_4_HP = 6;
+	
+	//Store variables and constants.
+	public static final int TIER_1_BIKE_COST = 0;
+	public static final int TIER_2_BIKE_COST = 1000;
+	public static final int TIER_3_BIKE_COST = 3000;
+	public static final int TIER_4_BIKE_COST = 6000;
+	public static final int TIER_1_SUIT_COST = 0;
+	public static final int TIER_2_SUIT_COST = 500;
+	public static final int TIER_3_SUIT_COST = 1000;
+	public static final int TIER_4_SUIT_COST = 2000;
+	public static int playerEarnings = 0;
+	public static int[] purchasedBikes = new int[NUM_BIKES];
+	public static int[] purchasedSuits = new int[NUM_SUITS];
+	public static int numPurchasedBikes = 0;
+	public static int numPurchasedSuits = 0;
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {

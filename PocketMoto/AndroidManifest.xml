@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    <instrumentation android:targetPackage="edu.umkc.wjfkc2.pocketmoto" android:name="android.test.InstrumentationTestRunner"></instrumentation>
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,7 @@
         <activity android:name="PMGame" android:screenOrientation="portrait"></activity>
         <activity android:name="PMAbout"></activity>
         <activity android:name="FragmentPreferenceActivity"></activity>
+        <uses-library android:name="android.test.runner" />
     </application>
 
 </manifest>

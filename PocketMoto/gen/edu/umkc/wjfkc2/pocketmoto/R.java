@@ -42,10 +42,12 @@ public final class R {
     }
     public static final class layout {
         public static final int appinfoscreen=0x7f030000;
-        public static final int fadein=0x7f030001;
-        public static final int fadeout=0x7f030002;
-        public static final int menuscreen=0x7f030003;
-        public static final int splashscreen=0x7f030004;
+        public static final int bikestorescreen=0x7f030001;
+        public static final int fadein=0x7f030002;
+        public static final int fadeout=0x7f030003;
+        public static final int menuscreen=0x7f030004;
+        public static final int splashscreen=0x7f030005;
+        public static final int suitstorescreen=0x7f030006;
     }
     public static final class raw {
         public static final int drivenedit=0x7f050000;
