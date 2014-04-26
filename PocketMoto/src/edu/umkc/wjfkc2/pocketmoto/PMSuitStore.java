@@ -17,6 +17,7 @@ public class PMSuitStore extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.suitstorescreen);
 		registerButtons();
+		storeFunc.updateCredits(this);
 	}
 	/** Code is run when user clicks on buttons. */
 	@Override
@@ -32,6 +33,7 @@ public class PMSuitStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Blue Suit of Noobness!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();
@@ -58,6 +60,7 @@ public class PMSuitStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Grey Suit of Experience!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();
@@ -110,6 +113,7 @@ public class PMSuitStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Neon Suit of Awesomeness!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();

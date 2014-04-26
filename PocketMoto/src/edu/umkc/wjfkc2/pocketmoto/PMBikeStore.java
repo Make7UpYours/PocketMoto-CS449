@@ -15,8 +15,9 @@ public class PMBikeStore extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.bikestorescreen);
+		setContentView(R.layout.bikestorescreen);	
 		registerButtons();
+		storeFunc.updateCredits(this);
 	}
 	/** Code is run when user clicks on buttons. */
 	@Override
@@ -32,6 +33,7 @@ public class PMBikeStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Grandma's Moped!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();
@@ -58,6 +60,7 @@ public class PMBikeStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Donatello!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();
@@ -84,6 +87,7 @@ public class PMBikeStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Super Sonic Bike!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();
@@ -110,6 +114,7 @@ public class PMBikeStore extends Activity implements OnClickListener {
 					CharSequence text = "You are the proud new owner" +
 							" of the Mega Awesome Bike!";
 					purchaseVerification(text);
+					storeFunc.updateCredits(this);
 				}else{
 					//Not enough funds.
 					notEnoughFunds();

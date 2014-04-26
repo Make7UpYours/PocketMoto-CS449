@@ -1,6 +1,8 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
 import junit.framework.Assert;
+import android.app.Activity;
+import android.widget.TextView;
 /** Implements business logic for the stores.
  *  Class methods are used for purchasing and selecting
  *  suits and bikes.
@@ -203,5 +205,14 @@ public class PMStoreFunc {
 		}
 		//Suit not owned.
 		return false;
+	}
+	/** Updates the UI displaying the new value for player earned credits.
+	 *  Method should be called upon Activity creation and after each 
+	 *  successful transaction.
+	 *  Param act is the Activity which is currently displaying the UI.
+	 */
+	public void updateCredits(Activity act){
+		TextView credits = (TextView)act.findViewById(R.id.numCreditsText);
+		credits.setText(Integer.toString(PMGameEngine.playerEarnings));
 	}
 }
