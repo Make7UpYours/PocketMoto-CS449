@@ -1,8 +1,12 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
 import junit.framework.Assert;
-
+/** Implements business logic for the stores.
+ *  Class methods are used for purchasing and selecting
+ *  suits and bikes.
+ */
 public class PMStoreFunc {
+	/** Store the stats for the various suits for purchase.*/
 	private class SuitStats{
 		private int suitColor;
 		private float suitHandling;
@@ -33,6 +37,7 @@ public class PMStoreFunc {
 			return suitCost;
 		}
 	}
+	/** Store the stats for the various bikes for purchase.*/
 	private class BikeStats{
 		private int bikeColor;
 		private float bikeAcceleration;
@@ -119,8 +124,9 @@ public class PMStoreFunc {
 		if (PMGameEngine.playerEarnings >= suitSelections[suitNum].getSuitCost()){
 			//Increase numPurchased and add to purchased list.
 			PMGameEngine.numPurchasedSuits += 1;
-			PMGameEngine.purchasedSuits[PMGameEngine.numPurchasedSuits] = suitNum;
+			PMGameEngine.purchasedSuits[PMGameEngine.numPurchasedSuits - 1] = suitNum;
 			PMGameEngine.playerEarnings -= suitSelections[suitNum].getSuitCost();
+			return true;
 		}
 		//Player does not have the funds.
 		return false;
@@ -141,13 +147,14 @@ public class PMStoreFunc {
 				notDuplicateSuit = false;
 			}
 		}
-		Assert.assertTrue("Player has already purchased this suit.",
+		Assert.assertTrue("Player has already purchased this bike.",
 				notDuplicateSuit);
 		if (PMGameEngine.playerEarnings >= bikeSelections[bikeNum].getBikeCost()){
 			//Increase numPurchased and add to purchased list.
 			PMGameEngine.numPurchasedBikes += 1;
-			PMGameEngine.purchasedBikes[PMGameEngine.numPurchasedBikes] = bikeNum;
+			PMGameEngine.purchasedBikes[PMGameEngine.numPurchasedBikes - 1] = bikeNum;
 			PMGameEngine.playerEarnings -= bikeSelections[bikeNum].getBikeCost();
+			return true;
 		}
 		//Player does not have the funds.
 		return false;

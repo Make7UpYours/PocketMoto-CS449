@@ -1,37 +1,57 @@
-<RelativeLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <ImageView
         android:id="@+id/menuScreenTexture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/pocketmotomain" >
-    </ImageView>
+        android:src="@drawable/pocketmotomain" />
 
-    <TableLayout
+    <Button
+        android:id="@+id/bikeStoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/suitStoreButton"
+        android:layout_below="@+id/suitStoreButton"
+        android:gravity="left|center_vertical"
+        android:text="@string/bikeStoreButtonText"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/suitStoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startButton"
+        android:layout_centerHorizontal="true"
+        android:gravity="left|center_vertical"
+        android:text="@string/suitStoreButtonText"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bikeStoreButton"
+        android:layout_alignBottom="@+id/bikeStoreButton"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="22dp"
+        android:text="Quit"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:padding="25dip" >
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="19dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="20dp"
+        android:text="@string/raceButtonText"
+        android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/startButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:text="Start!"
-            android:textSize="24.5sp" />
-
-        <Button
-            android:id="@+id/exitButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:text="Quit"
-            android:textSize="24.5sp" />
-    </TableLayout>
-    
-</RelativeLayout>    
+</RelativeLayout>

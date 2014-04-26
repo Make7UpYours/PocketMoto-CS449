@@ -15,6 +15,60 @@
         J.F. DiMarzo\n\n
         Original source can be found at:\n
         http://www.apress.com/9781430240297</string>
-    <string name="backgroundMusicKey">backgroundMusicKeyName</string>           
+    <string name="backgroundMusicKey">backgroundMusicKeyName</string>     
+	<string name="playerCredits">Player Credits:</string>
+	<string name="blueSuitInfo">Blue Suit of Noobness\n
+	    STATS:\n
+	    Color: Blue\n
+	    Handling: Terrible\n
+	    HP: 3\n\n
+	    Cost: 0 Credits</string>
+	<string name="greySuitInfo">Grey Suit of Experience\n
+	    STATS:\n
+	    Color: Grey\n
+	    Handling: Meh-Its-Ok\n
+	    HP: 4\n\n
+	    Cost: 500 Credits</string>
+	<string name="orangeSuitInfo">Extreme Orange Suit\n
+	    STATS:\n
+	    Color: Orange\n
+	    Handling: Gettin-Better\n
+	    HP: 5\n\n
+	    Cost: 1000 Credits</string>
+	<string name="neonSuitInfo">Neon Suit of Awesomeness\n
+	    STATS:\n
+	    Color: Neon Yellow\n
+	    Handling: Hell-Yeah\n
+	    HP: 6\n\n
+	    Cost: 2000 Credits</string>
+	<string name="redBikeInfo">Grandma\'s Moped\n
+	    STATS:\n
+	    Color: Red\n
+	    Speed: Turtle\n
+	    Acceleration: Crawl\n\n
+	    Cost: 0 Credits</string>
+	<string name="purpleBikeInfo">Donatello\n
+	    STATS:\n
+	    Color: Grey\n
+	    Speed: So-So\n
+	    Acceleration: Meh\n\n
+	    Cost: 1000 Credits</string>
+	<string name="yellowBikeInfo">Super Sonic Bike\n
+	    STATS:\n
+	    Color: Yellow\n
+	    Speed: Supa-Fast\n
+	    Acceleration: Rabbit\n\n
+	    Cost: 3000 Credits</string>
+	<string name="greenBikeInfo">Mega Awesome Bike\n
+	    STATS:\n
+	    Color: Green\n
+	    Speed: Warp\n
+	    Acceleration: Hold-on\n\n
+	    Cost: 6000 Credits</string>
+	<string name="purchaseButtonText">Purchase</string>
+	<string name="equipButtonText">Equip</string>
+	<string name="raceButtonText">Race</string>
+	<string name="suitStoreButtonText">Suit Store</string>
+	<string name="bikeStoreButtonText">Bike Store</string>
 
 </resources>

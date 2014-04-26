@@ -28,6 +28,8 @@
         <activity android:name="PMAbout"></activity>
         <activity android:name="FragmentPreferenceActivity"></activity>
         <uses-library android:name="android.test.runner" />
+        <activity android:name="PMSuitStore" android:screenOrientation="portrait"></activity>
+        <activity android:screenOrientation="portrait" android:name="PMBikeStore"></activity>
     </application>
 
 </manifest>

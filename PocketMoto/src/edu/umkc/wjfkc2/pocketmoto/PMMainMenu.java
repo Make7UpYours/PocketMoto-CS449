@@ -1,6 +1,5 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
-import junit.framework.Assert;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,25 +23,12 @@ public class PMMainMenu extends Activity implements OnClickListener {
 	private static final String PREFS_NAME = "PrefsFile";
 	private static final String MUTE_MUSIC_ATTRIBUTE_NAME = "musicMute";
 	private boolean muteMusic;
-	PMStoreFunc storeFunc = new PMStoreFunc();
-	/** Called when the activity if first created. */
+	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menuscreen);
-		//USING TEST DRIVEN DEVELOPMENT FOR EQUIPING FUNCTIONALITY!!!
-		//Need to use the UI and decided this was the best route.
-		for (int index = 0; index < 4; index++){
-			PMGameEngine.purchasedBikes[index] = index;
-			PMGameEngine.purchasedSuits[index] = index;
-		}
-		PMGameEngine.numPurchasedBikes = 4;
-		PMGameEngine.numPurchasedSuits = 4;
-		Assert.assertTrue(storeFunc.equipBike(1));
-		Assert.assertTrue(storeFunc.equipSuit(2));
-		//Game crashes if test fails!!!
-		
-		//Preserve muteMusic
+		//Preserve data.
         if (savedInstanceState != null) {
 			muteMusic = savedInstanceState.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
 		}
@@ -60,8 +46,15 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		View startButton = findViewById(R.id.startButton);
 		startButton.setOnClickListener(this);
 		
+		View suitStoreButton = findViewById(R.id.suitStoreButton);
+		suitStoreButton.setOnClickListener(this);
+		
+		View bikeStoreButton = findViewById(R.id.bikeStoreButton);
+		bikeStoreButton.setOnClickListener(this);
+		
 		View exitButton = findViewById(R.id.exitButton);
 		exitButton.setOnClickListener(this);
+		
 		try{
 			checkMute();	
 		}
@@ -144,6 +137,14 @@ public class PMMainMenu extends Activity implements OnClickListener {
 			 */
 			Intent game = new Intent(getApplicationContext(),PMGame.class);
 			PMMainMenu.this.startActivity(game);
+			break;
+		case R.id.bikeStoreButton:
+			Intent bikeStore = new Intent(getApplicationContext(),PMBikeStore.class);
+			PMMainMenu.this.startActivity(bikeStore);
+			break;
+		case R.id.suitStoreButton:
+			Intent suitStore = new Intent(getApplicationContext(),PMSuitStore.class);
+			PMMainMenu.this.startActivity(suitStore);
 			break;
 		case R.id.exitButton:
 			/* Exit Game, ensure exit is clean.

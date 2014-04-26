@@ -126,7 +126,7 @@ public class PMGameEngine {
 	public static final int TIER_2_SUIT_COST = 500;
 	public static final int TIER_3_SUIT_COST = 1000;
 	public static final int TIER_4_SUIT_COST = 2000;
-	public static int playerEarnings = 0;
+	public static int playerEarnings = 5000000; //TODO:Change default to 0 next iteration
 	public static int[] purchasedBikes = new int[NUM_BIKES];
 	public static int[] purchasedSuits = new int[NUM_SUITS];
 	public static int numPurchasedBikes = 0;
