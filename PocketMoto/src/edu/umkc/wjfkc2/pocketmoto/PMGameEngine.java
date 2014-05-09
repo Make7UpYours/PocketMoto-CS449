@@ -54,6 +54,7 @@ public class PMGameEngine {
 	public static final int NUM_GAME_INFO_TEXTURES = 2;
 	public static final int SCORE_GAME_INFO_INDEX = 0;
 	public static final int GAME_STATUS_INDEX = 1;
+	public static final int NUM_NUMBERS = 3;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;

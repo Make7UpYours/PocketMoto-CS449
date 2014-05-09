@@ -24,9 +24,9 @@ public class PMGameRenderer implements Renderer {
 	private PMMovementControl movementButtons = new PMMovementControl();
 	private PMEnvironmentObject[] environmentObjects =
 			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
-	private PMGameInfo gameInfos[] =
+	private PMGameInfo[] gameInfos =
 			new PMGameInfo[PMGameEngine.NUM_GAME_INFO_TEXTURES];
-	private PMNumbers numbers = new PMNumbers();
+	private PMNumbers[] numbers = new PMNumbers[PMGameEngine.NUM_NUMBERS];
 	private PMTextures textureLoader;
 	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
 		
@@ -93,6 +93,196 @@ public class PMGameRenderer implements Renderer {
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	/** Draws a nine to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawNine(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.25f, 0.75f, 0.0f);
+		//Draw nine to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws an eight to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawEight(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, 0.75f, 0.0f);
+		//Draw eight to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a seven to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawSeven(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.75f, 0.25f, 0.0f);
+		//Draw seven to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a six to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawSix(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.5f, 0.25f, 0.0f);
+		//Draw six to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a five to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawFive(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.25f, 0.25f, 0.0f);
+		//Draw five to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a four to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawFour(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, 0.25f, 0.0f);
+		//Draw four to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a three to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawThree(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.75f, 0.0f, 0.0f);
+		//Draw three to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a two to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawTwo(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.5f, 0.0f, 0.0f);
+		//Draw two to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a one to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawOne(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.25f, 0.0f, 0.0f);
+		//Draw one to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+	}
+	/** Draws a zero to the screen, used to display score and HP.
+	 *  Must pass the instance of PMNumbers that is to the drawn, the
+	 *  x position on the screen, and the y position.
+	 */
+	private void drawZero(PMNumbers num, float x, float y, GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(x, y, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, 0.0f, 0.0f);
+		//Draw zero to screen & pop matrix off stack.
+		num.draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
 	}
 	/** Determines if the player has run out of hp, if they have
 	 *  then method sets PMGameEngine.gameOver to true.
@@ -369,6 +559,12 @@ public class PMGameRenderer implements Renderer {
 				}
 				break;
 			}
+		}
+	}
+	/** Initializes instances of Numbers objects. */
+	private void initializeNumbers(){
+		for (int index = 0; index < PMGameEngine.NUM_NUMBERS; index++){
+			numbers[index] = new PMNumbers();
 		}
 	}
 	/** Initializes Game Info objects. */
@@ -904,8 +1100,9 @@ public class PMGameRenderer implements Renderer {
 		catch(NullPointerException e){
 			System.out.println("Failed to load background textures.");
 		}
-		
+		//Initialize multiple object instances.
 		initializeEnvironment();
 		initializeGameInfo();
+		initializeNumbers();
 	}
 }
