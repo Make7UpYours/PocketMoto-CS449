@@ -24,6 +24,9 @@ public class PMGameRenderer implements Renderer {
 	private PMMovementControl movementButtons = new PMMovementControl();
 	private PMEnvironmentObject[] environmentObjects =
 			new PMEnvironmentObject[PMGameEngine.MAX_ENVIRO_OBJECTS];
+	private PMGameInfo gameInfos[] =
+			new PMGameInfo[PMGameEngine.NUM_GAME_INFO_TEXTURES];
+	private PMNumbers numbers = new PMNumbers();
 	private PMTextures textureLoader;
 	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
 		
@@ -79,9 +82,11 @@ public class PMGameRenderer implements Renderer {
 			System.out.println("PMGameEngine.OBJECT_SCALE HAS BEEN MODIFIED, COLLISION DETECTION WILL NOT WORK PROPERLY!!!");
 		}
 		//My own function calls.
+		drawGameInfo(gl);
 		showButtons(gl);		
 		detectInitialEnviroCollisions();
 		detectPlayerCollisions();
+		checkHP();
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
@@ -89,7 +94,70 @@ public class PMGameRenderer implements Renderer {
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
 	}
-	
+	/** Determines if the player has run out of hp, if they have
+	 *  then method sets PMGameEngine.gameOver to true.
+	 */
+	private void checkHP(){
+		if(PMGameEngine.playerHP <= 0){
+			PMGameEngine.gameOver = true;
+		}
+	}
+	/** Displays information about the game state.
+	 *  Always displays the score and HP status, will display
+	 *  a start message at the very beginning of the game, if
+	 *  the player runs out of HP then the method will display
+	 *  a game over message.
+	 */
+	private void drawGameInfo(GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
+		gl.glScalef(1f, .125f, 1f);
+		gl.glTranslatef(0.0f, 7.0f, 0.0f);
+		//Load texture matrix mode and select the correct sprite.
+		gl.glMatrixMode(GL10.GL_TEXTURE);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, 0.0f, 0.0f);
+		//Draw score texture to screen & pop matrix off stack.
+		gameInfos[PMGameEngine.SCORE_GAME_INFO_INDEX].draw(gl, spriteSheets);
+		gl.glPopMatrix();
+		gl.glLoadIdentity();
+		
+		//Draw game status update.
+		if(bgScroll < 3){
+			//Display start message.
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(1f, .5f, 1f);
+			gl.glTranslatef(0.0f, -(bgScroll), 0.0f);
+			//Load texture matrix mode and select the correct sprite.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, .25f, 0.0f);
+			//Draw button texture to screen & pop matrix off stack.
+			gameInfos[PMGameEngine.SCORE_GAME_INFO_INDEX].draw(gl, spriteSheets);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+		}
+		if(PMGameEngine.gameOver == true){
+			//Display Game Over message.
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(1f, .5f, 1f);
+			gl.glTranslatef(0.0f, 0.5f, 0.0f);
+			//Load texture matrix mode and select the correct sprite.
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.0f, .5f, 0.0f);
+			//Draw button texture to screen & pop matrix off stack.
+			gameInfos[PMGameEngine.SCORE_GAME_INFO_INDEX].draw(gl, spriteSheets);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+		}
+	}
+	/** Draws the bike and suit image to the screen	 */
 	private void drawPlayer1(GL10 gl){
 		try{
 			drawBike(gl);
@@ -173,9 +241,10 @@ public class PMGameRenderer implements Renderer {
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX+ 0.1171875f)){
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
-					//Temp collision event, transport player to new random position.
-					Random rand = new Random();
-					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+					if (!environmentObjects[index].hitPlayer){
+						PMGameEngine.playerHP--;
+						environmentObjects[index].hitPlayer = true;
+					}
 				}
 				break;
 			case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
@@ -200,9 +269,10 @@ public class PMGameRenderer implements Renderer {
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
-					//Temp collision event, transport player to new random position.
-					Random rand = new Random();
-					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+					if (!environmentObjects[index].hitPlayer){
+						PMGameEngine.playerHP--;
+						environmentObjects[index].hitPlayer = true;
+					}
 				}
 				break;
 			case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
@@ -227,9 +297,10 @@ public class PMGameRenderer implements Renderer {
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
-					//Temp collision event, transport player to new random position.
-					Random rand = new Random();
-					PMGameEngine.curPlayerPosX = rand.nextFloat() * 3;
+					if (!environmentObjects[index].hitPlayer){
+						PMGameEngine.playerHP--;
+						environmentObjects[index].hitPlayer = true;
+					}
 				}
 				break;
 			}
@@ -300,6 +371,12 @@ public class PMGameRenderer implements Renderer {
 			}
 		}
 	}
+	/** Initializes Game Info objects. */
+	private void initializeGameInfo(){
+		for (int index = 0; index < PMGameEngine.NUM_GAME_INFO_TEXTURES; index++){
+			gameInfos[index] = new PMGameInfo();
+		}
+	}
 	/** Initializes environment objects. */
 	private void initializeEnvironment(){
 		for (int index = 0; index < PMGameEngine.MAX_ENVIRO_OBJECTS; index++){
@@ -344,6 +421,10 @@ public class PMGameRenderer implements Renderer {
 			//Object fell off screen.
 			if (environmentObjects[index].posY <= -2 
 					|| environmentObjects[index].posY >= 11){
+				if (!environmentObjects[index].hitPlayer){
+					//Award points to player.
+					PMGameEngine.score++;
+				}
 				environmentObjects[index].initializeEnvironmentVariables();
 			}
 		}
@@ -801,6 +882,10 @@ public class PMGameRenderer implements Renderer {
 					PMGameEngine.context, PMGameEngine.ENVIRONMENT_SPRITE_INDEX + 1);
 			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.PLAYER_SUIT_SHEET,
 					PMGameEngine.context, PMGameEngine.SUIT_SPRITE_INDEX + 1);
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.GAME_INFO,
+					PMGameEngine.context, PMGameEngine.GAME_INFO_INDEX + 1);
+			spriteSheets = textureLoader.loadTexture(gl, PMGameEngine.NUMBERS,
+					PMGameEngine.context, PMGameEngine.NUMBERS_INDEX + 1);
 		}
 		catch(NullPointerException e){
 			System.out.println("Failed to load sprite textures.");
@@ -821,5 +906,6 @@ public class PMGameRenderer implements Renderer {
 		}
 		
 		initializeEnvironment();
+		initializeGameInfo();
 	}
 }

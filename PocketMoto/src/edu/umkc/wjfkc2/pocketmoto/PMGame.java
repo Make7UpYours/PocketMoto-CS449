@@ -38,54 +38,63 @@ public class PMGame extends Activity implements SensorEventListener {
 	 *  This method will be used to move the biker left & right.
 	 *  The faster the player rotates the screen, the faster the
 	 *  biker will move.
+	 *  Will only run code if the game is not over.
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event){
-		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-			float yAxisRot = event.values[1];
-			if (yAxisRot < -(PMGameEngine.START_ROT_MOVEMENT)){
-				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_LEFT;
-				PMGameEngine.playerBikeTurnRate = yAxisRot;
-			}else if(yAxisRot > PMGameEngine.START_ROT_MOVEMENT){
-				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_RIGHT;
-				PMGameEngine.playerBikeTurnRate = yAxisRot;
-			}else{
-				//Screen is not rotating, return to default state.
-				PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_NO_ROT;
-			}
+		if (!PMGameEngine.gameOver){
+			if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+				float yAxisRot = event.values[1];
+				if (yAxisRot < -(PMGameEngine.START_ROT_MOVEMENT)){
+					PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_LEFT;
+					PMGameEngine.playerBikeTurnRate = yAxisRot;
+				}else if(yAxisRot > PMGameEngine.START_ROT_MOVEMENT){
+					PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_ROT_RIGHT;
+					PMGameEngine.playerBikeTurnRate = yAxisRot;
+				}else{
+					//Screen is not rotating, return to default state.
+					PMGameEngine.playerBikeLatAction = PMGameEngine.SCREEN_NO_ROT;
+				}
+			}	
 		}
 	}
-	/** Detect when the player touches the screen to move the character. */
+	/** Detect when the player touches the screen to move the character.
+	 *  Will only run code if the game is not over.
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		//Obtain the x & y coords of the touch event.
-		float x = event.getX();
-		float y = event.getY();
-		/* Restrict touch event to lower 3/40 (.075) of the screen.
-		 * This code is my own, I used the a non-depreciated method
-		 * to obtain the screen area.
-		 */
-		DisplayMetrics screenMetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(screenMetrics);
-		int height = (3 * screenMetrics.heightPixels) / 40;
-		int playableArea = screenMetrics.heightPixels - height;
-		int width = screenMetrics.widthPixels;
-		//Rest of block is from DiMarzio.
-		if (y > playableArea){
-			switch (event.getAction()){
-			case MotionEvent.ACTION_DOWN:
-				if(x < width / 2){ //Left side of screen.
-					PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_BRAKE;
-				}else{ //Right side of screen.
-					PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_THROTTLE;
+		if(!PMGameEngine.gameOver){
+			//Obtain the x & y coords of the touch event.
+			float x = event.getX();
+			float y = event.getY();
+			/* Restrict touch event to lower 3/40 (.075) of the screen.
+			 * This code is my own, I used the a non-depreciated method
+			 * to obtain the screen area.
+			 */
+			DisplayMetrics screenMetrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(screenMetrics);
+			int height = (3 * screenMetrics.heightPixels) / 40;
+			int playableArea = screenMetrics.heightPixels - height;
+			int width = screenMetrics.widthPixels;
+			//Rest of block is from DiMarzio.
+			if (y > playableArea){
+				switch (event.getAction()){
+				case MotionEvent.ACTION_DOWN:
+					if(x < width / 2){ //Left side of screen.
+						PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_BRAKE;
+					}else{ //Right side of screen.
+						PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_THROTTLE;
+					}
+					break;
+				case MotionEvent.ACTION_UP:
+					PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_RELEASE;
+					break;
 				}
-				break;
-			case MotionEvent.ACTION_UP:
-				PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_RELEASE;
-				break;
 			}
 		}
-		
+		else{
+			PMGameEngine.playerBikeAction = PMGameEngine.PLAYER_RELEASE;
+		}
 		return false;
 	}
 	

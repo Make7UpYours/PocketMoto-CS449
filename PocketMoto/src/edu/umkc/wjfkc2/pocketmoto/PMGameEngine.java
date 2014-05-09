@@ -47,14 +47,21 @@ public class PMGameEngine {
 	//My own constants
 	public static final int MOVEMENT_BUTTONS = R.drawable.bikercontrolbuttons;
 	public static final int ENVIRONMENT_OBJECTS = R.drawable.environment;
-	public static final int NUM_SPRITESHEETS = 4;
+	public static final int GAME_INFO = R.drawable.gameinfo;
+	public static final int NUMBERS = R.drawable.numbers;
+	public static final int NUM_SPRITESHEETS = 6;
 	public static final float PLAYER_Y_POS = .275f;
+	public static final int NUM_GAME_INFO_TEXTURES = 2;
+	public static final int SCORE_GAME_INFO_INDEX = 0;
+	public static final int GAME_STATUS_INDEX = 1;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;
 	public static final int MOVEMENT_BUTTONS_INDEX = 1;
 	public static final int ENVIRONMENT_SPRITE_INDEX = 2;
 	public static final int SUIT_SPRITE_INDEX = 3;
+	public static final int GAME_INFO_INDEX = 4;
+	public static final int NUMBERS_INDEX = 5;
 	
 	//EnvironmentObject constants.
 	public static final int MAX_ENVIRO_OBJECTS = 4;
@@ -131,6 +138,10 @@ public class PMGameEngine {
 	public static int[] purchasedSuits = new int[NUM_SUITS];
 	public static int numPurchasedBikes = 0;
 	public static int numPurchasedSuits = 0;
+	
+	//Game state variables
+	public static boolean gameOver = false; 
+	public static int score = 0;
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {

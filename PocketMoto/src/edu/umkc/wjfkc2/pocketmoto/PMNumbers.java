@@ -3,28 +3,10 @@ package edu.umkc.wjfkc2.pocketmoto;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
-/** Creates instances of environmental objects that the player must dodge.
- *  Most of this code was came from: Practical Android 4 Games Development
- *  by J.F. DiMarzio
- *  It will be noted where I used my own code. There might be areas
- *  that are slightly modified numerically from J.F. DiMarzio's code
- *  and these will not be noted. 
- */
-public class PMEnvironmentObject {
-	public float posY = 0f;
-	public float posX = 0f;
-	public int enviroType = 0;
-	public int carColor = -1;
-	public boolean hitPlayer = false;
-	
-	private final int LEFT_ROCK = 0;
-	private final int RIGHT_ROCK = 1;
-	
-	public Random random = new Random();
-	
+
+public class PMNumbers {
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
@@ -47,43 +29,8 @@ public class PMEnvironmentObject {
 			0,1,2,
 			0,2,3,
 	};
-	/** Determines what type of environment object will be drawn,
-	 *  if it will actually be drawn to the screen, and the 
-	 *  starting position of the object.
-	 *  This method was my own creation.
-	 */
-	public void initializeEnvironmentVariables(){
-		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
-		assert enviroType < PMGameEngine.NUM_ENVIRO_TYPES:
-			"PMEnvironmentObject.enviroType has generated an invalid int.";
-		switch(enviroType){
-		case PMGameEngine.OBJ_TYPE_ROCK:
-			int rockSide = random.nextInt(2);
-			switch(rockSide){
-			case LEFT_ROCK:
-				posX = 0f;
-				posY = (random.nextFloat() * 4) + 6;
-				break;
-			case RIGHT_ROCK:
-				posX = 3f;
-				posY = (random.nextFloat() * 4) + 6;
-				break;
-			}
-			break;
-		case PMGameEngine.OBJ_TYPE_UPWRD_CAR:
-			carColor = random.nextInt(4);
-			posX = 2.0f;
-			posY = (random.nextFloat() * 4) + 6;
-			break;
-		case PMGameEngine.OBJ_TYPE_DWNWRD_CAR:
-			carColor = random.nextInt(4);
-			posX = 1.0f;
-			posY = (random.nextFloat() * 4) + 6;
-			break;
-		}
-	}
-	/** Load up necessary attributes for PMEnvironmentObject. */
-	public PMEnvironmentObject() {
+	/** Load up necessary attributes for PMNumbers. */
+	public PMNumbers() {
 		//Populate buffers.
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -101,9 +48,9 @@ public class PMEnvironmentObject {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	/** Draw environment object image. */
+	/** Draw the number image. */
 	public void draw(GL10 gl, int[] spriteSheet) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[PMGameEngine.ENVIRONMENT_SPRITE_INDEX]);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, spriteSheet[PMGameEngine.NUMBERS_INDEX]);
 		//Enable culling & ignore any vertices not on the front face.
 		gl.glFrontFace(GL10.GL_CCW);
 		gl.glEnable(GL10.GL_CULL_FACE);

@@ -26,12 +26,14 @@ public final class R {
         public static final int bikercontrolbuttons=0x7f020002;
         public static final int bikes=0x7f020003;
         public static final int environment=0x7f020004;
-        public static final int grass=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int pocketmotomain=0x7f020007;
-        public static final int pocketmotosplash=0x7f020008;
-        public static final int reset=0x7f020009;
-        public static final int road=0x7f02000a;
+        public static final int gameinfo=0x7f020005;
+        public static final int grass=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int numbers=0x7f020008;
+        public static final int pocketmotomain=0x7f020009;
+        public static final int pocketmotosplash=0x7f02000a;
+        public static final int reset=0x7f02000b;
+        public static final int road=0x7f02000c;
     }
     public static final class id {
         public static final int about_content=0x7f090000;
