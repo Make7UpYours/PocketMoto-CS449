@@ -14,7 +14,7 @@ import android.view.View.OnClickListener;
  *  by J.F. DiMarzio
  *  It will be noted where his code is used. 
  */
-//TODO:SAVE PRECIOUS DATA AND DESIGN STORE MENUS!!!
+//TODO:SAVE PRECIOUS DATA AND DESIGN HIGH SCORE MENU!!!
 public class PMMainMenu extends Activity implements OnClickListener {
 	final PMGameEngine engine = new PMGameEngine(); //From J.F. DiMarzio.
 	static final private int MUTE_MUSIC = Menu.FIRST;
@@ -22,6 +22,7 @@ public class PMMainMenu extends Activity implements OnClickListener {
 	static final private int ABOUT = Menu.FIRST + 1;
 	private static final String PREFS_NAME = "PrefsFile";
 	private static final String MUTE_MUSIC_ATTRIBUTE_NAME = "musicMute";
+	private static final String CREDITS_EARNED_ATTRIBUTE_NAME = "creditsEarned";
 	private boolean muteMusic;
 	/** Called when the activity is first created. */
 	@Override
@@ -31,10 +32,12 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		//Preserve data.
         if (savedInstanceState != null) {
 			muteMusic = savedInstanceState.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
+			PMGameEngine.playerEarnings = savedInstanceState.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000); //TODO:CHANGE VALUE TO 0 FOR DEFAULT
 		}
 		else {
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 			muteMusic = settings.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
+			PMGameEngine.playerEarnings = settings.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000);//TODO:CHANGE VALUE TO 0 FOR DEFAULT
 		}
 	    
 	    //OMITTED FOR THE TIME BEING!!!
@@ -67,10 +70,11 @@ public class PMMainMenu extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
 		super.onPause();
-
+		
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, muteMusic);
+		editor.putInt(CREDITS_EARNED_ATTRIBUTE_NAME, PMGameEngine.playerEarnings);
 
 		// Commit the edits
 		editor.commit();
@@ -154,10 +158,11 @@ public class PMMainMenu extends Activity implements OnClickListener {
 			clean = engine.onExit(v);
 			if (clean)
 			{
-				//Save muteMusic prefs. This is my code.
+				//Save precious data. This is my code.
 				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, muteMusic);
+				editor.putInt(CREDITS_EARNED_ATTRIBUTE_NAME, PMGameEngine.playerEarnings);
 
 				// Commit the edits
 				editor.commit();

@@ -54,7 +54,15 @@ public class PMGameEngine {
 	public static final int NUM_GAME_INFO_TEXTURES = 2;
 	public static final int SCORE_GAME_INFO_INDEX = 0;
 	public static final int GAME_STATUS_INDEX = 1;
-	public static final int NUM_NUMBERS = 3;
+	//Number display constants.
+	public static final int NUM_NUMBERS = 7;
+	public static final int SCORE_UNITS_NUMBERS_INDEX = 0;
+	public static final int SCORE_TENS_NUMBERS_INDEX = 1;
+	public static final int SCORE_HUNDS_NUMBERS_INDEX = 2;
+	public static final int HP_NUMBERS_INDEX = 3;
+	public static final int CREDIT_UNITS_NUMBERS_INDEX = 4;
+	public static final int CREDIT_TENS_NUMBERS_INDEX = 5;
+	public static final int CREDIT_HUNDS_NUMBERS_INDEX = 6;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;
@@ -134,7 +142,7 @@ public class PMGameEngine {
 	public static final int TIER_2_SUIT_COST = 500;
 	public static final int TIER_3_SUIT_COST = 1000;
 	public static final int TIER_4_SUIT_COST = 2000;
-	public static int playerEarnings = 5000000; //TODO:Change default to 0 next iteration
+	public static int playerEarnings;
 	public static int[] purchasedBikes = new int[NUM_BIKES];
 	public static int[] purchasedSuits = new int[NUM_SUITS];
 	public static int numPurchasedBikes = 0;
@@ -143,6 +151,8 @@ public class PMGameEngine {
 	//Game state variables
 	public static boolean gameOver = false; 
 	public static int score = 0;
+	public static final int NUM_HIGH_SCORES = 5;
+	public static int[] highScores = new int[NUM_HIGH_SCORES];
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {

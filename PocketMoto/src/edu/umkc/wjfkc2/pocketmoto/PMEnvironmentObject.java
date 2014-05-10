@@ -56,6 +56,7 @@ public class PMEnvironmentObject {
 		enviroType = random.nextInt(PMGameEngine.NUM_ENVIRO_TYPES);
 		assert enviroType < PMGameEngine.NUM_ENVIRO_TYPES:
 			"PMEnvironmentObject.enviroType has generated an invalid int.";
+		hitPlayer = false;
 		switch(enviroType){
 		case PMGameEngine.OBJ_TYPE_ROCK:
 			int rockSide = random.nextInt(2);

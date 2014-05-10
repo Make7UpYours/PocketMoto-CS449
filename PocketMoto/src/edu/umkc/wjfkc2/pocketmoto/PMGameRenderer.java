@@ -86,6 +86,8 @@ public class PMGameRenderer implements Renderer {
 		showButtons(gl);		
 		detectInitialEnviroCollisions();
 		detectPlayerCollisions();
+		drawHPNums(gl);
+		drawScoreNums(gl);
 		checkHP();
 		
 		//Enable transparency for textures.
@@ -93,6 +95,160 @@ public class PMGameRenderer implements Renderer {
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	/** Draws the current score the player has earned throughout gameplay
+	 *  to the screen.
+	 *  The method will calculate the numerical value for hundreds, tens,
+	 *  and units and will display their values to the screen.
+	 *  The max possible score displayed is 999.
+	 */
+	//TODO:REFACTOR!!!
+	private void drawScoreNums(GL10 gl){
+		if(PMGameEngine.score == 0){
+			drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+		}
+		else if(PMGameEngine.score >= 999){
+			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+		}
+		else{
+			int hunds = PMGameEngine.score / 100;
+			int tens = (PMGameEngine.score % 100) / 10;
+			int units = (PMGameEngine.score % 100) % 10;
+			//Determine hunds placement.
+			if(hunds == 9){
+				drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 8){
+				drawEight(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 7){
+				drawSeven(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 6){
+				drawSix(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 5){
+				drawFive(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 4){
+				drawFour(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 3){
+				drawThree(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 2){
+				drawTwo(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else if (hunds == 1){
+				drawOne(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			}
+			//Determine tens placement.
+			if(tens == 9){
+				drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 8){
+				drawEight(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 7){
+				drawSeven(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 6){
+				drawSix(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 5){
+				drawFive(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 4){
+				drawFour(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 3){
+				drawThree(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 2){
+				drawTwo(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else if (tens == 1){
+				drawOne(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
+			}
+			//Determine units placement.
+			if(units == 9){
+				drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 8){
+				drawEight(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 7){
+				drawSeven(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 6){
+				drawSix(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 5){
+				drawFive(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 4){
+				drawFour(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 3){
+				drawThree(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 2){
+				drawTwo(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else if (units == 1){
+				drawOne(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
+			}
+		}
+	}
+	/** Draws the current HP of the player to the screen.
+	 *  Determines the current value of playerHP and calls the proper method
+	 *  for draw(Number).
+	 */
+	//TODO:REFACTOR!!!
+	private void drawHPNums(GL10 gl){
+		if(PMGameEngine.playerHP == 9){
+			drawNine(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 8){
+			drawEight(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 7){
+			drawSeven(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 6){
+			drawSix(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 5){
+			drawFive(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 4){
+			drawFour(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 3){
+			drawThree(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 2){
+			drawTwo(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else if (PMGameEngine.playerHP == 1){
+			drawOne(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		}
 	}
 	/** Draws a nine to the screen, used to display score and HP.
 	 *  Must pass the instance of PMNumbers that is to the drawn, the
@@ -102,12 +258,12 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0.25f, 0.75f, 0.0f);
+		gl.glTranslatef(0.25f, 0.5f, 0.0f);
 		//Draw nine to screen & pop matrix off stack.
 		num.draw(gl, spriteSheets);
 		gl.glPopMatrix();
@@ -121,12 +277,12 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0.0f, 0.75f, 0.0f);
+		gl.glTranslatef(0.0f, 0.5f, 0.0f);
 		//Draw eight to screen & pop matrix off stack.
 		num.draw(gl, spriteSheets);
 		gl.glPopMatrix();
@@ -140,7 +296,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -159,7 +315,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -178,7 +334,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -197,7 +353,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -216,7 +372,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -235,7 +391,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -254,7 +410,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -273,7 +429,7 @@ public class PMGameRenderer implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		gl.glScalef(1f, .125f, 1f);
+		gl.glScalef(.2575f, .25f, 1f);
 		gl.glTranslatef(x, y, 0.0f);
 		//Load texture matrix mode and select the correct sprite.
 		gl.glMatrixMode(GL10.GL_TEXTURE);
@@ -430,7 +586,7 @@ public class PMGameRenderer implements Renderer {
 						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.90625f
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX+ 0.1171875f)){
 					//Player has collided with environment
-					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
 						PMGameEngine.playerHP--;
 						environmentObjects[index].hitPlayer = true;
@@ -458,7 +614,7 @@ public class PMGameRenderer implements Renderer {
 						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.828125f
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
 					//Player has collided with environment
-					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
 						PMGameEngine.playerHP--;
 						environmentObjects[index].hitPlayer = true;
@@ -486,7 +642,7 @@ public class PMGameRenderer implements Renderer {
 						&& (PMGameEngine.curPlayerPosX + 0.609375f <= environmentObjects[index].posX + 0.828125f
 						&& PMGameEngine.curPlayerPosX + 0.609375f >= environmentObjects[index].posX + 0.171875f)){
 					//Player has collided with environment
-					//TODO: SLOW OR STOP PLAYER AND REDUCE HP ONCE IMPLEMENTED!!!
+					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
 						PMGameEngine.playerHP--;
 						environmentObjects[index].hitPlayer = true;
