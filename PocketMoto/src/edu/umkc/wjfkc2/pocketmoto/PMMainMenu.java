@@ -17,12 +17,28 @@ import android.view.View.OnClickListener;
 //TODO:SAVE PRECIOUS DATA AND DESIGN HIGH SCORE MENU!!!
 public class PMMainMenu extends Activity implements OnClickListener {
 	final PMGameEngine engine = new PMGameEngine(); //From J.F. DiMarzio.
+	private boolean purchased;
+	private int curPointer;
 	static final private int MUTE_MUSIC = Menu.FIRST;
 	//static final private int SETTINGS = Menu.FIRST; OMITTED FOR NOW!!!
 	static final private int ABOUT = Menu.FIRST + 1;
+	
 	private static final String PREFS_NAME = "PrefsFile";
 	private static final String MUTE_MUSIC_ATTRIBUTE_NAME = "musicMute";
 	private static final String CREDITS_EARNED_ATTRIBUTE_NAME = "creditsEarned";
+	private static final String NUM_PURCHASED_SUITS_ATT_NAME = "numPurchasedSuits";
+	private static final String NUM_PURCHASED_BIKES_ATT_NAME = "numPurchasedBikes";
+	private static final String RED_BIKE_PURCHASE_ATT_NAME = "redBikePurchased";
+	private static final String PURP_BIKE_PURCHASE_ATT_NAME = "purpleBikePurchased";
+	private static final String YELLOW_BIKE_PURCHASE_ATT_NAME = "yellowBikePurchased";
+	private static final String GREEN_BIKE_PURCHASE_ATT_NAME = "greenBikePurchased";
+	private static final String BLUE_SUIT_PURCHASE_ATT_NAME = "blueSuitPurchased";
+	private static final String GREY_SUIT_PURCHASE_ATT_NAME = "greySuitPurchased";
+	private static final String ORANGE_SUIT_PURCHASE_ATT_NAME = "orangeSuitPurchased";
+	private static final String NEON_SUIT_PURCHASE_ATT_NAME = "neonSuitPurchased";
+	private static final String CUR_PLAYER_BIKE_ATT_NAME = "currentPlayerBike";
+	private static final String CUR_PLAYER_SUIT_ATT_NAME = "currentPlayerSuit";
+	
 	private boolean muteMusic;
 	/** Called when the activity is first created. */
 	@Override
@@ -31,13 +47,109 @@ public class PMMainMenu extends Activity implements OnClickListener {
 		setContentView(R.layout.menuscreen);
 		//Preserve data.
         if (savedInstanceState != null) {
+        	curPointer = 0;
+        	purchased = false;
+        	
 			muteMusic = savedInstanceState.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
-			PMGameEngine.playerEarnings = savedInstanceState.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000); //TODO:CHANGE VALUE TO 0 FOR DEFAULT
+			PMGameEngine.playerEarnings = savedInstanceState.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000); //CHANGE THIS VALUE TO ADD MORE DEFAULT CREDITS
+			PMGameEngine.numPurchasedBikes = savedInstanceState.getInt(NUM_PURCHASED_BIKES_ATT_NAME, 1);
+			PMGameEngine.numPurchasedSuits = savedInstanceState.getInt(NUM_PURCHASED_SUITS_ATT_NAME, 1);
+			PMGameEngine.curPlayerBike = savedInstanceState.getInt(CUR_PLAYER_BIKE_ATT_NAME, PMGameEngine.RED_BIKE);
+			PMGameEngine.curPlayerSuit = savedInstanceState.getInt(CUR_PLAYER_SUIT_ATT_NAME, PMGameEngine.BLUE_SUIT);
+			//Load bike purchases.
+			purchased = savedInstanceState.getBoolean(RED_BIKE_PURCHASE_ATT_NAME, true);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.RED_BIKE;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(PURP_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.PURPLE_BIKE;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(YELLOW_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.YELLOW_BIKE;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(GREEN_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.GREEN_BIKE;
+			}
+			//Load suit purchases.
+			curPointer = 0;
+			purchased = savedInstanceState.getBoolean(BLUE_SUIT_PURCHASE_ATT_NAME, true);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.BLUE_SUIT;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(GREY_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.GREY_SUIT;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(ORANGE_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.ORANGE_SUIT;
+				curPointer++;
+			}
+			purchased = savedInstanceState.getBoolean(NEON_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.NEON_SUIT;
+			}
 		}
 		else {
+			curPointer = 0;
+			purchased = false;
+			
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 			muteMusic = settings.getBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, false);
-			PMGameEngine.playerEarnings = settings.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000);//TODO:CHANGE VALUE TO 0 FOR DEFAULT
+			PMGameEngine.playerEarnings = settings.getInt(CREDITS_EARNED_ATTRIBUTE_NAME, 500000);//CHANGE THIS VALUE TO ADD MORE DEFAULT CREDITS
+			PMGameEngine.numPurchasedBikes = settings.getInt(NUM_PURCHASED_BIKES_ATT_NAME, 1);
+			PMGameEngine.numPurchasedSuits = settings.getInt(NUM_PURCHASED_SUITS_ATT_NAME, 1);
+			PMGameEngine.curPlayerBike = settings.getInt(CUR_PLAYER_BIKE_ATT_NAME, PMGameEngine.RED_BIKE);
+			PMGameEngine.curPlayerSuit = settings.getInt(CUR_PLAYER_SUIT_ATT_NAME, PMGameEngine.BLUE_SUIT);
+			//Load bike purchases.
+			purchased = settings.getBoolean(RED_BIKE_PURCHASE_ATT_NAME, true);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.RED_BIKE;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(PURP_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.PURPLE_BIKE;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(YELLOW_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.YELLOW_BIKE;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(GREEN_BIKE_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedBikes[curPointer] = PMGameEngine.GREEN_BIKE;
+			}
+			//Load suit purchases.
+			curPointer = 0;
+			purchased = settings.getBoolean(BLUE_SUIT_PURCHASE_ATT_NAME, true);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.BLUE_SUIT;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(GREY_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.GREY_SUIT;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(ORANGE_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.ORANGE_SUIT;
+				curPointer++;
+			}
+			purchased = settings.getBoolean(NEON_SUIT_PURCHASE_ATT_NAME, false);
+			if(purchased){
+				PMGameEngine.purchasedSuits[curPointer] = PMGameEngine.NEON_SUIT;
+			}
 		}
 	    
 	    //OMITTED FOR THE TIME BEING!!!
@@ -70,11 +182,47 @@ public class PMMainMenu extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
 		super.onPause();
-		
+		//TODO:REFACTOR!!! CREATE METHOD!!!
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, muteMusic);
 		editor.putInt(CREDITS_EARNED_ATTRIBUTE_NAME, PMGameEngine.playerEarnings);
+		editor.putInt(NUM_PURCHASED_BIKES_ATT_NAME, PMGameEngine.numPurchasedBikes);
+		editor.putInt(NUM_PURCHASED_SUITS_ATT_NAME, PMGameEngine.numPurchasedSuits);
+		editor.putInt(CUR_PLAYER_BIKE_ATT_NAME, PMGameEngine.curPlayerBike);
+		editor.putInt(CUR_PLAYER_SUIT_ATT_NAME, PMGameEngine.curPlayerSuit);
+		//Save bike purchases.
+		for (int index = 0; index < PMGameEngine.numPurchasedBikes; index++){
+			int bike = PMGameEngine.purchasedBikes[index];
+			if(bike == PMGameEngine.RED_BIKE){
+				editor.putBoolean(RED_BIKE_PURCHASE_ATT_NAME, true);
+			}
+			else if(bike == PMGameEngine.PURPLE_BIKE){
+				editor.putBoolean(PURP_BIKE_PURCHASE_ATT_NAME, true);
+			}
+			else if(bike == PMGameEngine.YELLOW_BIKE){
+				editor.putBoolean(YELLOW_BIKE_PURCHASE_ATT_NAME, true);
+			}
+			else if(bike == PMGameEngine.GREEN_BIKE){
+				editor.putBoolean(GREEN_BIKE_PURCHASE_ATT_NAME, true);
+			}
+		}
+		//Save suit purchases.
+		for (int index = 0; index < PMGameEngine.numPurchasedSuits; index++){
+			int suit = PMGameEngine.purchasedSuits[index];
+			if(suit == PMGameEngine.BLUE_SUIT){
+				editor.putBoolean(BLUE_SUIT_PURCHASE_ATT_NAME, true);
+			}
+			else if(suit == PMGameEngine.GREY_SUIT){
+				editor.putBoolean(GREY_SUIT_PURCHASE_ATT_NAME, true);
+			}
+			else if(suit == PMGameEngine.ORANGE_SUIT){
+				editor.putBoolean(ORANGE_SUIT_PURCHASE_ATT_NAME, true);
+			}
+			else if (suit == PMGameEngine.NEON_SUIT){
+				editor.putBoolean(NEON_SUIT_PURCHASE_ATT_NAME, true);
+			}
+		}
 
 		// Commit the edits
 		editor.commit();
@@ -158,11 +306,48 @@ public class PMMainMenu extends Activity implements OnClickListener {
 			clean = engine.onExit(v);
 			if (clean)
 			{
+				//TODO:REFACTOR!!! CREATE METHOD!!!
 				//Save precious data. This is my code.
 				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putBoolean(MUTE_MUSIC_ATTRIBUTE_NAME, muteMusic);
 				editor.putInt(CREDITS_EARNED_ATTRIBUTE_NAME, PMGameEngine.playerEarnings);
+				editor.putInt(NUM_PURCHASED_BIKES_ATT_NAME, PMGameEngine.numPurchasedBikes);
+				editor.putInt(NUM_PURCHASED_SUITS_ATT_NAME, PMGameEngine.numPurchasedSuits);
+				editor.putInt(CUR_PLAYER_BIKE_ATT_NAME, PMGameEngine.curPlayerBike);
+				editor.putInt(CUR_PLAYER_SUIT_ATT_NAME, PMGameEngine.curPlayerSuit);
+				//Save bike purchases.
+				for (int index = 0; index < PMGameEngine.numPurchasedBikes; index++){
+					int bike = PMGameEngine.purchasedBikes[index];
+					if(bike == PMGameEngine.RED_BIKE){
+						editor.putBoolean(RED_BIKE_PURCHASE_ATT_NAME, true);
+					}
+					else if(bike == PMGameEngine.PURPLE_BIKE){
+						editor.putBoolean(PURP_BIKE_PURCHASE_ATT_NAME, true);
+					}
+					else if(bike == PMGameEngine.YELLOW_BIKE){
+						editor.putBoolean(YELLOW_BIKE_PURCHASE_ATT_NAME, true);
+					}
+					else if(bike == PMGameEngine.GREEN_BIKE){
+						editor.putBoolean(GREEN_BIKE_PURCHASE_ATT_NAME, true);
+					}
+				}
+				//Save suit purchases.
+				for (int index = 0; index < PMGameEngine.numPurchasedSuits; index++){
+					int suit = PMGameEngine.purchasedSuits[index];
+					if(suit == PMGameEngine.BLUE_SUIT){
+						editor.putBoolean(BLUE_SUIT_PURCHASE_ATT_NAME, true);
+					}
+					else if(suit == PMGameEngine.GREY_SUIT){
+						editor.putBoolean(GREY_SUIT_PURCHASE_ATT_NAME, true);
+					}
+					else if(suit == PMGameEngine.ORANGE_SUIT){
+						editor.putBoolean(ORANGE_SUIT_PURCHASE_ATT_NAME, true);
+					}
+					else if (suit == PMGameEngine.NEON_SUIT){
+						editor.putBoolean(NEON_SUIT_PURCHASE_ATT_NAME, true);
+					}
+				}
 
 				// Commit the edits
 				editor.commit();

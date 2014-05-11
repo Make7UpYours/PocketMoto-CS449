@@ -36,10 +36,10 @@ public class PMGameEngine {
 	public static final float BRAKE_SPEED_MODIFIER = 0.0525f;
 	public static float curPlayerPosX = 2f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
-	public static float playerBikeHandling = 0.025f;
-	public static float playerBikeAcceleration = 0.0015f;
-	public static float playerBikeSpeed = 0.0625f;
-	public static float playerHP = 3;
+	public static float playerBikeHandling = 0.025f; //TODO:SAVE!!!
+	public static float playerBikeAcceleration = 0.0015f; //TODO:SAVE!!!
+	public static float playerBikeSpeed = 0.0625f; //TODO:SAVE!!
+	public static float playerHP = 3; //TODO:SAVE
 	public static float curPlayerHP;
 	public static float curPlayerBikeAcceleration;
 	public static float curPlayerBikeSpeed;
@@ -55,7 +55,7 @@ public class PMGameEngine {
 	public static final int SCORE_GAME_INFO_INDEX = 0;
 	public static final int GAME_STATUS_INDEX = 1;
 	//Number display constants.
-	public static final int NUM_NUMBERS = 7;
+	public static final int NUM_NUMBERS = 8;
 	public static final int SCORE_UNITS_NUMBERS_INDEX = 0;
 	public static final int SCORE_TENS_NUMBERS_INDEX = 1;
 	public static final int SCORE_HUNDS_NUMBERS_INDEX = 2;
@@ -63,6 +63,7 @@ public class PMGameEngine {
 	public static final int CREDIT_UNITS_NUMBERS_INDEX = 4;
 	public static final int CREDIT_TENS_NUMBERS_INDEX = 5;
 	public static final int CREDIT_HUNDS_NUMBERS_INDEX = 6;
+	public static final int CREDIT_THOUSANDS_NUMBERS_INDEX = 7;
 	
 	//Keep track of sprite sheet indexes.
 	public static final int BIKE_SPRITE_INDEX = 0;
@@ -145,14 +146,15 @@ public class PMGameEngine {
 	public static int playerEarnings;
 	public static int[] purchasedBikes = new int[NUM_BIKES];
 	public static int[] purchasedSuits = new int[NUM_SUITS];
-	public static int numPurchasedBikes = 0;
-	public static int numPurchasedSuits = 0;
+	public static int numPurchasedBikes;
+	public static int numPurchasedSuits;
 	
 	//Game state variables
-	public static boolean gameOver = false; 
+	public static boolean gameOver = false;
+	public static boolean creditsAwarded = false;
 	public static int score = 0;
 	public static final int NUM_HIGH_SCORES = 5;
-	public static int[] highScores = new int[NUM_HIGH_SCORES];
+	public static int[] highScores = new int[NUM_HIGH_SCORES]; //TODO:SAVE & IMPLEMENT!!!
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {

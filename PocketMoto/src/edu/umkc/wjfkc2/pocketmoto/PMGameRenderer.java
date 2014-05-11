@@ -89,12 +89,161 @@ public class PMGameRenderer implements Renderer {
 		drawHPNums(gl);
 		drawScoreNums(gl);
 		checkHP();
+		if(PMGameEngine.gameOver){
+			drawCreditsNums(gl);
+			awardCredits();
+		}
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    loopEnd = System.currentTimeMillis();
 	    loopRunTime = loopEnd - loopStart;
+	}
+	//TODO:REFACTOR!!!
+	private void drawCreditsNums(GL10 gl){
+		if(PMGameEngine.score * 2 == 0){
+			drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.325f, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.325f, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.325f, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.325f, gl);
+		}
+		else if(PMGameEngine.score * 2 >= 9999){
+			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 3.015f, 0.325f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 2.91f, 0.325f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 2.805f, 0.325f, gl);
+			drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.325f, gl);
+		}
+		else{
+			int thous = (PMGameEngine.score * 2) / 1000;
+			int hunds = ((PMGameEngine.score * 2) % 1000) / 100;
+			int tens = (((PMGameEngine.score * 2) % 1000) % 100) / 10;
+			int units = (((PMGameEngine.score * 2) % 1000) % 100) % 10;
+			//Determine thous placement.
+			if(thous == 9){
+				drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 8){
+				drawEight(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 7){
+				drawSeven(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 6){
+				drawSix(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 5){
+				drawFive(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 4){
+				drawFour(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 3){
+				drawThree(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 2){
+				drawTwo(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else if (thous == 1){
+				drawOne(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
+			}
+			//Determine hunds placement.
+			if(hunds == 9){
+				drawNine(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 8){
+				drawEight(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 7){
+				drawSeven(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 6){
+				drawSix(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 5){
+				drawFive(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 4){
+				drawFour(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 3){
+				drawThree(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 2){
+				drawTwo(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else if (hunds == 1){
+				drawOne(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
+			}
+			//Determine tens placement.
+			if(tens == 9){
+				drawNine(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 8){
+				drawEight(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 7){
+				drawSeven(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 6){
+				drawSix(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 5){
+				drawFive(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 4){
+				drawFour(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 3){
+				drawThree(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 2){
+				drawTwo(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else if (tens == 1){
+				drawOne(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
+			}
+			//Determine units placement.
+			if(units == 9){
+				drawNine(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 8){
+				drawEight(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 7){
+				drawSeven(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 6){
+				drawSix(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 5){
+				drawFive(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 4){
+				drawFour(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 3){
+				drawThree(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 2){
+				drawTwo(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else if (units == 1){
+				drawOne(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+			else{
+				drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
+			}
+		}
 	}
 	/** Draws the current score the player has earned throughout gameplay
 	 *  to the screen.
@@ -503,6 +652,15 @@ public class PMGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 		}
 	}
+	/** Awards credits that the player has earned based upon their score
+	 *  during the game.
+	 */
+	private void awardCredits(){
+		if (!PMGameEngine.creditsAwarded){
+			PMGameEngine.playerEarnings += PMGameEngine.score * 2;
+			PMGameEngine.creditsAwarded = true;
+		}
+	}
 	/** Draws the bike and suit image to the screen	 */
 	private void drawPlayer1(GL10 gl){
 		try{
@@ -773,7 +931,8 @@ public class PMGameRenderer implements Renderer {
 			//Object fell off screen.
 			if (environmentObjects[index].posY <= -2 
 					|| environmentObjects[index].posY >= 11){
-				if (!environmentObjects[index].hitPlayer){
+				if (!environmentObjects[index].hitPlayer 
+						&& !PMGameEngine.gameOver){
 					//Award points to player.
 					PMGameEngine.score++;
 				}
