@@ -1,12 +1,9 @@
 package edu.umkc.wjfkc2.pocketmoto;
 
-import java.util.Random;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import junit.framework.Assert;
-
 import android.opengl.GLSurfaceView.Renderer;
 
 /** Renders game images.
@@ -29,10 +26,6 @@ public class PMGameRenderer implements Renderer {
 	private PMNumbers[] numbers = new PMNumbers[PMGameEngine.NUM_NUMBERS];
 	private PMTextures textureLoader;
 	private int[] spriteSheets = new int[PMGameEngine.NUM_SPRITESHEETS];
-		
-	private long loopStart = 0;
-	private long loopEnd = 0;
-	private long loopRunTime = 0;
 	
 	private float bgScroll;
 	
@@ -60,17 +53,6 @@ public class PMGameRenderer implements Renderer {
 	/** Primary Game Loop. */
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		//Ensure that the game runs at 60 fps.
-		loopStart = System.currentTimeMillis();
-		/* Comment out for now, seems to be causing game to run choppy.
-		 * Need more understanding of how this block works.
-		 * try {
-			if (loopRunTime < PMGameEngine.GAME_THREAD_FPS_SLEEP){
-				Thread.sleep(PMGameEngine.GAME_THREAD_FPS_SLEEP);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); //Clear buffers.
 		
 		scrollBackground(gl);
@@ -92,157 +74,271 @@ public class PMGameRenderer implements Renderer {
 		if(PMGameEngine.gameOver){
 			drawCreditsNums(gl);
 			awardCredits();
+			//Determine high score.
+			if(PMGameEngine.score > PMGameEngine.highScore){
+				PMGameEngine.highScore = PMGameEngine.score;
+			}
 		}
 		
 		//Enable transparency for textures.
 		gl.glEnable(GL10.GL_BLEND); 
 	    gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-	    loopEnd = System.currentTimeMillis();
-	    loopRunTime = loopEnd - loopStart;
 	}
-	//TODO:REFACTOR!!!
+	/** Draws the current credits the player has earned throughout gameplay
+	 *  to the screen.
+	 *  The method will calculate the numerical value for thousands, hundreds, tens,
+	 *  and units and will display their values to the screen.
+	 *  The max possible score displayed is 9999.
+	 */
 	private void drawCreditsNums(GL10 gl){
 		if(PMGameEngine.score * 2 == 0){
-			drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.325f, gl);
-			drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.325f, gl);
-			drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.325f, gl);
-			drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.325f, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
 		}
 		else if(PMGameEngine.score * 2 >= 9999){
-			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 3.015f, 0.325f, gl);
-			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 2.91f, 0.325f, gl);
-			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 2.805f, 0.325f, gl);
-			drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.325f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+			drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
 		}
 		else{
-			int thous = (PMGameEngine.score * 2) / 1000;
-			int hunds = ((PMGameEngine.score * 2) % 1000) / 100;
-			int tens = (((PMGameEngine.score * 2) % 1000) % 100) / 10;
-			int units = (((PMGameEngine.score * 2) % 1000) % 100) % 10;
-			//Determine thous placement.
-			if(thous == 9){
-				drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 8){
-				drawEight(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 7){
-				drawSeven(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 6){
-				drawSix(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 5){
-				drawFive(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 4){
-				drawFour(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 3){
-				drawThree(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 2){
-				drawTwo(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else if (thous == 1){
-				drawOne(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], 2.7f, 0.3825f, gl);
-			}
-			//Determine hunds placement.
-			if(hunds == 9){
-				drawNine(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 8){
-				drawEight(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 7){
-				drawSeven(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 6){
-				drawSix(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 5){
-				drawFive(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 4){
-				drawFour(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 3){
-				drawThree(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 2){
-				drawTwo(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else if (hunds == 1){
-				drawOne(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], 2.805f, 0.3825f, gl);
-			}
-			//Determine tens placement.
-			if(tens == 9){
-				drawNine(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 8){
-				drawEight(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 7){
-				drawSeven(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 6){
-				drawSix(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 5){
-				drawFive(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 4){
-				drawFour(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 3){
-				drawThree(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 2){
-				drawTwo(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else if (tens == 1){
-				drawOne(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], 2.91f, 0.3825f, gl);
-			}
-			//Determine units placement.
-			if(units == 9){
-				drawNine(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 8){
-				drawEight(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 7){
-				drawSeven(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 6){
-				drawSix(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 5){
-				drawFive(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 4){
-				drawFour(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 3){
-				drawThree(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 2){
-				drawTwo(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else if (units == 1){
-				drawOne(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], 3.015f, 0.3825f, gl);
-			}
+			calculateCredits(gl);
+		}
+	}
+	/** Determines the current credits that the player is to be awarded and displays
+	 *  the correct numerical result to the screen.
+	 */
+	private void calculateCredits(GL10 gl){
+		int thous = (PMGameEngine.score * 2) / 1000;
+		int hunds = ((PMGameEngine.score * 2) % 1000) / 100;
+		int tens = (((PMGameEngine.score * 2) % 1000) % 100) / 10;
+		int units = (((PMGameEngine.score * 2) % 1000) % 100) % 10;
+		//Determine thous placement.
+		if(thous == 9){
+			drawNine(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 8){
+			drawEight(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 7){
+			drawSeven(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 6){
+			drawSix(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 5){
+			drawFive(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 4){
+			drawFour(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 3){
+			drawThree(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 2){
+			drawTwo(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (thous == 1){
+			drawOne(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.CREDIT_THOUSANDS_NUMBERS_INDEX], PMGameEngine.CREDITS_THOUS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		//Determine hunds placement.
+		if(hunds == 9){
+			drawNine(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 8){
+			drawEight(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 7){
+			drawSeven(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 6){
+			drawSix(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 5){
+			drawFive(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 4){
+			drawFour(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 3){
+			drawThree(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 2){
+			drawTwo(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (hunds == 1){
+			drawOne(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.CREDIT_HUNDS_NUMBERS_INDEX], PMGameEngine.CREDITS_HUNDS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		//Determine tens placement.
+		if(tens == 9){
+			drawNine(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 8){
+			drawEight(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 7){
+			drawSeven(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 6){
+			drawSix(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 5){
+			drawFive(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 4){
+			drawFour(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 3){
+			drawThree(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 2){
+			drawTwo(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (tens == 1){
+			drawOne(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.CREDIT_TENS_NUMBERS_INDEX], PMGameEngine.CREDITS_TENS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		//Determine units placement.
+		if(units == 9){
+			drawNine(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 8){
+			drawEight(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 7){
+			drawSeven(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 6){
+			drawSix(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 5){
+			drawFive(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 4){
+			drawFour(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 3){
+			drawThree(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 2){
+			drawTwo(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else if (units == 1){
+			drawOne(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.CREDIT_UNITS_NUMBERS_INDEX], PMGameEngine.CREDITS_UNITS_NUM_X, PMGameEngine.CREDITS_NUM_Y, gl);
+		}
+	}
+	/** Determines the current score the player has earned and draws the correct
+	 *  numerical values to the screen.
+	 */
+	private void calculateScore(GL10 gl){
+		int hunds = PMGameEngine.score / 100;
+		int tens = (PMGameEngine.score % 100) / 10;
+		int units = (PMGameEngine.score % 100) % 10;
+		//Determine hunds placement.
+		if(hunds == 9){
+			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 8){
+			drawEight(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 7){
+			drawSeven(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 6){
+			drawSix(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 5){
+			drawFive(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 4){
+			drawFour(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 3){
+			drawThree(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 2){
+			drawTwo(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (hunds == 1){
+			drawOne(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		//Determine tens placement.
+		if(tens == 9){
+			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 8){
+			drawEight(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 7){
+			drawSeven(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 6){
+			drawSix(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 5){
+			drawFive(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 4){
+			drawFour(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 3){
+			drawThree(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 2){
+			drawTwo(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (tens == 1){
+			drawOne(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		//Determine units placement.
+		if(units == 9){
+			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 8){
+			drawEight(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 7){
+			drawSeven(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 6){
+			drawSix(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 5){
+			drawFive(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 4){
+			drawFour(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 3){
+			drawThree(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 2){
+			drawTwo(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else if (units == 1){
+			drawOne(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+		}
+		else{
+			drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
 		}
 	}
 	/** Draws the current score the player has earned throughout gameplay
@@ -251,152 +347,65 @@ public class PMGameRenderer implements Renderer {
 	 *  and units and will display their values to the screen.
 	 *  The max possible score displayed is 999.
 	 */
-	//TODO:REFACTOR!!!
 	private void drawScoreNums(GL10 gl){
 		if(PMGameEngine.score == 0){
-			drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+			drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+			drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
 		}
 		else if(PMGameEngine.score >= 999){
-			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
+			drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], PMGameEngine.SCORE_UNITS_X, PMGameEngine.SCORE_NUM_Y, gl);
+			drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], PMGameEngine.SCORE_TENS_X, PMGameEngine.SCORE_NUM_Y, gl);
+			drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], PMGameEngine.SCORE_HUNDS_X, PMGameEngine.SCORE_NUM_Y, gl);
 		}
 		else{
-			int hunds = PMGameEngine.score / 100;
-			int tens = (PMGameEngine.score % 100) / 10;
-			int units = (PMGameEngine.score % 100) % 10;
-			//Determine hunds placement.
-			if(hunds == 9){
-				drawNine(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 8){
-				drawEight(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 7){
-				drawSeven(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 6){
-				drawSix(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 5){
-				drawFive(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 4){
-				drawFour(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 3){
-				drawThree(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 2){
-				drawTwo(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else if (hunds == 1){
-				drawOne(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.SCORE_HUNDS_NUMBERS_INDEX], 1.175f, 3.0275f, gl);
-			}
-			//Determine tens placement.
-			if(tens == 9){
-				drawNine(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 8){
-				drawEight(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 7){
-				drawSeven(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 6){
-				drawSix(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 5){
-				drawFive(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 4){
-				drawFour(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 3){
-				drawThree(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 2){
-				drawTwo(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else if (tens == 1){
-				drawOne(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.SCORE_TENS_NUMBERS_INDEX], 1.28f, 3.0275f, gl);
-			}
-			//Determine units placement.
-			if(units == 9){
-				drawNine(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 8){
-				drawEight(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 7){
-				drawSeven(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 6){
-				drawSix(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 5){
-				drawFive(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 4){
-				drawFour(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 3){
-				drawThree(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 2){
-				drawTwo(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else if (units == 1){
-				drawOne(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
-			else{
-				drawZero(numbers[PMGameEngine.SCORE_UNITS_NUMBERS_INDEX], 1.385f, 3.0275f, gl);
-			}
+			calculateScore(gl);
 		}
 	}
 	/** Draws the current HP of the player to the screen.
 	 *  Determines the current value of playerHP and calls the proper method
 	 *  for draw(Number).
 	 */
-	//TODO:REFACTOR!!!
 	private void drawHPNums(GL10 gl){
-		if(PMGameEngine.playerHP == 9){
-			drawNine(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		if(PMGameEngine.curPlayerHP == 9){
+			drawNine(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 8){
-			drawEight(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 8){
+			drawEight(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 7){
-			drawSeven(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 7){
+			drawSeven(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 6){
-			drawSix(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 6){
+			drawSix(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 5){
-			drawFive(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 5){
+			drawFive(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 4){
-			drawFour(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 4){
+			drawFour(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 3){
-			drawThree(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 3){
+			drawThree(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 2){
-			drawTwo(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 2){
+			drawTwo(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
-		else if (PMGameEngine.playerHP == 1){
-			drawOne(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+		else if (PMGameEngine.curPlayerHP == 1){
+			drawOne(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
 		else{
-			drawZero(numbers[PMGameEngine.HP_NUMBERS_INDEX], 3.4125f, 3.0275f, gl);
+			drawZero(numbers[PMGameEngine.HP_NUMBERS_INDEX], PMGameEngine.HP_NUM_X,
+					PMGameEngine.HP_NUM_Y, gl);
 		}
 	}
 	/** Draws a nine to the screen, used to display score and HP.
@@ -593,7 +602,7 @@ public class PMGameRenderer implements Renderer {
 	 *  then method sets PMGameEngine.gameOver to true.
 	 */
 	private void checkHP(){
-		if(PMGameEngine.playerHP <= 0){
+		if(PMGameEngine.curPlayerHP <= 0){
 			PMGameEngine.gameOver = true;
 		}
 	}
@@ -746,7 +755,7 @@ public class PMGameRenderer implements Renderer {
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
-						PMGameEngine.playerHP--;
+						PMGameEngine.curPlayerHP--;
 						environmentObjects[index].hitPlayer = true;
 					}
 				}
@@ -774,7 +783,7 @@ public class PMGameRenderer implements Renderer {
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
-						PMGameEngine.playerHP--;
+						PMGameEngine.curPlayerHP--;
 						environmentObjects[index].hitPlayer = true;
 					}
 				}
@@ -802,7 +811,7 @@ public class PMGameRenderer implements Renderer {
 					//Player has collided with environment
 					//TODO: SLOW OR STOP PLAYER!!!
 					if (!environmentObjects[index].hitPlayer){
-						PMGameEngine.playerHP--;
+						PMGameEngine.curPlayerHP--;
 						environmentObjects[index].hitPlayer = true;
 					}
 				}

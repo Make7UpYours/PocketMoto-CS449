@@ -31,8 +31,21 @@ public class PMGame extends Activity implements SensorEventListener {
 		 */
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mGyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+		if(PMGameEngine.gameOver){
+			reset();
+		}
 		gameView = new PMGameView(this);
 		setContentView(gameView);
+	}
+	/** Resets values to their default so that the player may
+	 *  play another game after dying.
+	 */
+	private void reset(){
+		PMGameEngine.gameOver = false;
+		PMGameEngine.creditsAwarded = false;
+		PMGameEngine.score = 0;
+		PMGameEngine.curPlayerPosX = 2f;
+		PMGameEngine.curPlayerHP = PMGameEngine.playerHP;
 	}
 	/** Detect when the player rotates the device left or right.
 	 *  This method will be used to move the biker left & right.

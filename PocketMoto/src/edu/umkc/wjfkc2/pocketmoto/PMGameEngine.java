@@ -36,11 +36,11 @@ public class PMGameEngine {
 	public static final float BRAKE_SPEED_MODIFIER = 0.0525f;
 	public static float curPlayerPosX = 2f; //Keep track of the player's current x coord.
 	public static int playerBikeAction = 0;
-	public static float playerBikeHandling = 0.025f; //TODO:SAVE!!!
-	public static float playerBikeAcceleration = 0.0015f; //TODO:SAVE!!!
-	public static float playerBikeSpeed = 0.0625f; //TODO:SAVE!!
-	public static float playerHP = 3; //TODO:SAVE
-	public static float curPlayerHP;
+	public static float playerBikeHandling;
+	public static float playerBikeAcceleration;
+	public static float playerBikeSpeed;
+	public static int playerHP;
+	public static int curPlayerHP;
 	public static float curPlayerBikeAcceleration;
 	public static float curPlayerBikeSpeed;
 	
@@ -150,20 +150,26 @@ public class PMGameEngine {
 	public static int numPurchasedSuits;
 	
 	//Game state variables
-	public static boolean gameOver = false;
+	public static boolean gameOver = true;
 	public static boolean creditsAwarded = false;
 	public static int score = 0;
-	public static final int NUM_HIGH_SCORES = 5;
-	public static int[] highScores = new int[NUM_HIGH_SCORES]; //TODO:SAVE & IMPLEMENT!!!
+	public static int highScore;
+	public static final float HP_NUM_X = 3.4125f;
+	public static final float HP_NUM_Y = 3.0275f;
+	public static final float SCORE_NUM_Y = 3.0275f;
+	public static final float SCORE_HUNDS_X = 1.175f;
+	public static final float SCORE_TENS_X = 1.28f;
+	public static final float SCORE_UNITS_X = 1.385f;
+	public static final float CREDITS_NUM_Y = 0.3825f;
+	public static final float CREDITS_UNITS_NUM_X = 3.015f;
+	public static final float CREDITS_TENS_NUM_X = 2.91f;
+	public static final float CREDITS_HUNDS_NUM_X = 2.805f;
+	public static final float CREDITS_THOUS_NUM_X = 2.7f;
 	
 	/** Kill the game and exit */
 	public boolean onExit(View v) {
 		try
 		{
-			/* ISSUES WITH EXITING WITH MUSIC THREAD...
-			Intent bgmusic = new Intent(context, SFMusic.class);
-			context.stopService(bgmusic);
-			musicThread.stop();*/
 			return true;
 		}catch(Exception e){
 			return false;

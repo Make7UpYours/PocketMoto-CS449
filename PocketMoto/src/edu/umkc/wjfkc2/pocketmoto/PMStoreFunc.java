@@ -200,6 +200,9 @@ public class PMStoreFunc {
 				PMGameEngine.playerBikeHandling = 
 						suitSelections[suitNum].getSuitHandling();
 				PMGameEngine.playerHP = suitSelections[suitNum].getSuitHP();
+				if (PMGameEngine.gameOver){
+					PMGameEngine.curPlayerHP = PMGameEngine.playerHP;	
+				}
 				return true;
 			}
 		}
